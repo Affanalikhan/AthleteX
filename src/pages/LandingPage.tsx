@@ -20,7 +20,9 @@ import {
   Psychology,
   Groups,
   AdminPanelSettings,
+  School,
 } from '@mui/icons-material';
+import AnimatedSportsBackground from '../components/AnimatedSportsBackground';
 
 const LandingPage: React.FC = () => {
   const navigate = useNavigate();
@@ -59,7 +61,10 @@ const LandingPage: React.FC = () => {
   ];
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: '#0a0a0a' }}>
+    <Box sx={{ minHeight: '100vh', bgcolor: '#0a0a0a', position: 'relative' }}>
+      {/* Animated Sports Background */}
+      <AnimatedSportsBackground variant="full" />
+      
       {/* Navigation */}
       <AppBar 
         position="fixed" 
@@ -102,8 +107,8 @@ const LandingPage: React.FC = () => {
               </Button>
               <Button
                 variant="outlined"
-                startIcon={<AdminPanelSettings />}
-                onClick={() => navigate('/admin/login')}
+                startIcon={<School />}
+                onClick={() => navigate('/trainer/login')}
                 sx={{
                   color: '#00f5ff',
                   borderColor: '#00f5ff',
@@ -115,7 +120,28 @@ const LandingPage: React.FC = () => {
                   }
                 }}
               >
-                Admin Portal
+                Trainer Portal
+              </Button>
+              <Button
+                variant="contained"
+                startIcon={<AdminPanelSettings />}
+                onClick={() => navigate('/sai-login')}
+                sx={{
+                  background: 'linear-gradient(135deg, #1976d2 0%, #42a5f5 100%)',
+                  color: 'white',
+                  textTransform: 'none',
+                  fontWeight: 600,
+                  px: 3,
+                  py: 1,
+                  boxShadow: 3,
+                  '&:hover': {
+                    background: 'linear-gradient(135deg, #1565c0 0%, #1976d2 100%)',
+                    boxShadow: 6,
+                    transform: 'translateY(-1px)',
+                  }
+                }}
+              >
+                SAI Login
               </Button>
             </Box>
           </Toolbar>
@@ -167,10 +193,11 @@ const LandingPage: React.FC = () => {
                 <Typography 
                   variant="h1" 
                   sx={{ 
-                    fontSize: { xs: '2.5rem', md: '4rem' },
+                    fontSize: { xs: '1.75rem', sm: '2.5rem', md: '4rem' },
                     fontWeight: 900,
-                    lineHeight: 1.1,
+                    lineHeight: 1.2,
                     mb: 3,
+                    px: { xs: 2, md: 0 },
                     background: 'linear-gradient(135deg, #ffffff, #00f5ff)',
                     backgroundClip: 'text',
                     WebkitBackgroundClip: 'text',
@@ -188,24 +215,35 @@ const LandingPage: React.FC = () => {
                     mb: 4, 
                     color: 'rgba(255, 255, 255, 0.8)',
                     fontWeight: 300,
-                    lineHeight: 1.6
+                    lineHeight: 1.6,
+                    fontSize: { xs: '1rem', sm: '1.25rem', md: '1.5rem' },
+                    px: { xs: 2, md: 0 }
                   }}
                 >
                   Advanced AI-powered performance analysis for athletes. 
                   Get personalized insights, training recommendations, and track your progress like never before.
                 </Typography>
                 
-                <Box display="flex" gap={3} flexWrap="wrap">
+                <Box 
+                  display="flex" 
+                  gap={{ xs: 2, md: 3 }} 
+                  flexWrap="wrap"
+                  sx={{ 
+                    flexDirection: { xs: 'column', sm: 'row' },
+                    px: { xs: 2, md: 0 }
+                  }}
+                >
                   <Button
                     variant="contained"
                     size="large"
                     onClick={() => navigate('/login')}
+                    fullWidth={window.innerWidth < 600}
                     sx={{
                       bgcolor: '#00f5ff',
                       color: '#000',
-                      px: 4,
-                      py: 2,
-                      fontSize: '1.1rem',
+                      px: { xs: 3, md: 4 },
+                      py: { xs: 1.5, md: 2 },
+                      fontSize: { xs: '1rem', md: '1.1rem' },
                       fontWeight: 'bold',
                       textTransform: 'none',
                       borderRadius: 3,
@@ -225,12 +263,13 @@ const LandingPage: React.FC = () => {
                     variant="outlined"
                     size="large"
                     startIcon={<Timeline />}
+                    fullWidth={window.innerWidth < 600}
                     sx={{
                       color: 'white',
                       borderColor: 'rgba(255, 255, 255, 0.3)',
-                      px: 4,
-                      py: 2,
-                      fontSize: '1.1rem',
+                      px: { xs: 3, md: 4 },
+                      py: { xs: 1.5, md: 2 },
+                      fontSize: { xs: '1rem', md: '1.1rem' },
                       fontWeight: 500,
                       textTransform: 'none',
                       borderRadius: 3,
@@ -252,7 +291,7 @@ const LandingPage: React.FC = () => {
               <Box
                 sx={{
                   position: 'relative',
-                  display: 'flex',
+                  display: { xs: 'none', md: 'flex' },
                   justifyContent: 'center',
                   alignItems: 'center',
                   height: 500
@@ -343,6 +382,41 @@ const LandingPage: React.FC = () => {
               </Box>
             </Grid>
           </Grid>
+          
+          {/* Mobile Stats Section */}
+          <Box sx={{ display: { xs: 'block', md: 'none' }, mt: 6, px: 2 }}>
+            <Grid container spacing={2}>
+              {[
+                { icon: <Speed />, label: '95%', desc: 'Performance Boost' },
+                { icon: <Assessment />, label: 'AI', desc: 'Powered Analysis' },
+                { icon: <TrendingUp />, label: '24/7', desc: 'Progress Tracking' },
+                { icon: <Psychology />, label: 'Smart', desc: 'Recommendations' }
+              ].map((stat, index) => (
+                <Grid item xs={6} key={index}>
+                  <Card
+                    sx={{
+                      bgcolor: 'rgba(255, 255, 255, 0.1)',
+                      backdropFilter: 'blur(20px)',
+                      border: '1px solid rgba(255, 255, 255, 0.2)',
+                      borderRadius: 2
+                    }}
+                  >
+                    <CardContent sx={{ p: 2, textAlign: 'center' }}>
+                      <Box sx={{ color: '#00f5ff', mb: 1 }}>
+                        {stat.icon}
+                      </Box>
+                      <Typography variant="h6" sx={{ color: 'white', fontWeight: 'bold', fontSize: '1.25rem' }}>
+                        {stat.label}
+                      </Typography>
+                      <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '0.75rem' }}>
+                        {stat.desc}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
         </Container>
       </Box>
 

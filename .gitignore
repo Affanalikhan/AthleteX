@@ -108,3 +108,27 @@ lint/tmp/
 lint-results*.xml
 node_modules
 .vercel
+
+# React / Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+build/
+dist/
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Netlify
+.netlify/
+
+# Testing
+coverage/
+
+# Misc
+.DS_Store
+*.swp
+*.swo
+*~

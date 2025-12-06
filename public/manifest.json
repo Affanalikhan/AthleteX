@@ -1,0 +1,64 @@
+{
+  "short_name": "AthleteX",
+  "name": "AthleteX - AI Training Platform",
+  "description": "Advanced AI-powered performance analysis for athletes. Get personalized insights, training recommendations, and track your progress.",
+  "icons": [
+    {
+      "src": "/logo192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#00f5ff",
+  "background_color": "#0a0a0a",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "categories": ["sports", "health", "fitness"],
+  "shortcuts": [
+    {
+      "name": "Start Assessment",
+      "short_name": "Assess",
+      "description": "Begin a fitness assessment",
+      "url": "/assessment"
+    },
+    {
+      "name": "View Performance",
+      "short_name": "Stats",
+      "description": "Check your performance metrics",
+      "url": "/performance"
+    },
+    {
+      "name": "Training",
+      "short_name": "Train",
+      "description": "Access training programs",
+      "url": "/training"
+    }
+  ],
+  "prefer_related_applications": false,
+  "related_applications": [],
+  "share_target": {
+    "action": "/share",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [
+        {
+          "name": "media",
+          "accept": ["image/*", "video/*"]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "appId": "com.athletex.app",
+  "appName": "AthleteX",
+  "webDir": "build",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https",
+    "cleartext": true
+  },
+  "android": {
+    "allowMixedContent": true,
+    "captureInput": true,
+    "webContentsDebuggingEnabled": true,
+    "backgroundColor": "#000000"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "backgroundColor": "#000000",
+      "showSpinner": true,
+      "androidSpinnerStyle": "large",
+      "spinnerColor": "#00f5ff"
+    },
+    "Camera": {
+      "permissions": ["camera", "photos"]
+    },
+    "Microphone": {
+      "permissions": ["microphone"]
+    }
+  }
+}

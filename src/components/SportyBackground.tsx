@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box } from '@mui/material';
+import AnimatedSportsBackground from './AnimatedSportsBackground';
 
 interface SportyBackgroundProps {
   children: React.ReactNode;
@@ -47,6 +48,14 @@ const SportyBackground: React.FC<SportyBackgroundProps> = ({
     }
   };
 
+  const getAnimationVariant = () => {
+    switch (variant) {
+      case 'minimal': return 'minimal';
+      case 'pattern': return 'subtle';
+      default: return 'subtle';
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -56,25 +65,8 @@ const SportyBackground: React.FC<SportyBackgroundProps> = ({
         ...getBackgroundStyle()
       }}
     >
-      {/* Animated Background Elements */}
-      <Box
-        sx={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: `
-            url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2300f5ff' fill-opacity='0.01'%3E%3Cpath d='M50 50m-20 0a20 20 0 1 1 40 0a20 20 0 1 1-40 0'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")
-          `,
-          opacity: 0.3,
-          animation: 'float 20s ease-in-out infinite',
-          '@keyframes float': {
-            '0%, 100%': { transform: 'translateY(0px)' },
-            '50%': { transform: 'translateY(-20px)' }
-          }
-        }}
-      />
+      {/* Animated Sports Background with Athletes */}
+      <AnimatedSportsBackground variant={getAnimationVariant()} />
       
       {/* Content */}
       <Box sx={{ position: 'relative', zIndex: 1 }}>

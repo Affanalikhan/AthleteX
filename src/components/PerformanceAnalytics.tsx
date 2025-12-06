@@ -95,17 +95,17 @@ const PerformanceAnalytics: React.FC<PerformanceAnalyticsProps> = ({
 
   const getTestIcon = (testType: TestType) => {
     switch (testType) {
-      case TestType.SPEED:
+      case TestType.TENNIS_STANDING_START:
         return <Speed color="primary" />;
-      case TestType.AGILITY:
+      case TestType.FOUR_X_10M_SHUTTLE_RUN:
         return <SportsGymnastics color="secondary" />;
-      case TestType.STRENGTH:
+      case TestType.MEDICINE_BALL_THROW:
         return <FitnessCenter color="error" />;
-      case TestType.ENDURANCE:
+      case TestType.ENDURANCE_RUN:
         return <Timer color="warning" />;
-      case TestType.FLEXIBILITY:
+      case TestType.SIT_AND_REACH:
         return <Accessibility color="info" />;
-      case TestType.BALANCE:
+      case TestType.STANDING_VERTICAL_JUMP:
         return <Balance color="success" />;
       default:
         return <Speed color="primary" />;

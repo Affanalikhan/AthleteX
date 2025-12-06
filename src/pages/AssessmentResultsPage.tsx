@@ -76,11 +76,13 @@ const AssessmentResultsPage: React.FC = () => {
 
       // Start AI analysis
       setAnalyzing(true);
+      console.log('Starting AI analysis...', { assessmentResult, allAssessmentsCount: allAssessments.length, athleteSports });
       const aiAnalysis = await aiAnalysisService.analyzeAssessment(
         assessmentResult,
         allAssessments,
         athleteSports
       );
+      console.log('AI Analysis complete:', aiAnalysis);
       setAnalysis(aiAnalysis);
       setAnalyzing(false);
 
@@ -300,8 +302,13 @@ const AssessmentResultsPage: React.FC = () => {
               title="AI Insights & Analysis"
               subheader="Personalized insights based on your performance"
             />
-            <Grid container spacing={2}>
-              {analysis.insights.map((insight, index) => (
+            {analysis.insights.length === 0 ? (
+              <Alert severity="info" sx={{ mt: 2 }}>
+                No specific insights available yet. Complete more assessments to get personalized AI insights.
+              </Alert>
+            ) : (
+              <Grid container spacing={2}>
+                {analysis.insights.map((insight, index) => (
                 <Grid item xs={12} md={6} key={index}>
                   <Card variant="outlined" sx={{ height: '100%' }}>
                     <CardContent>
@@ -325,7 +332,8 @@ const AssessmentResultsPage: React.FC = () => {
                   </Card>
                 </Grid>
               ))}
-            </Grid>
+              </Grid>
+            )}
           </Paper>
 
           {/* Performance Metrics */}
@@ -336,24 +344,30 @@ const AssessmentResultsPage: React.FC = () => {
                   <FitnessCenter sx={{ mr: 1, verticalAlign: 'middle' }} />
                   Performance Breakdown
                 </Typography>
-                <List>
-                  {analysis.performanceMetrics.strengths.map((strength, index) => (
-                    <ListItem key={index}>
-                      <ListItemIcon>
-                        <CheckCircle color="success" />
-                      </ListItemIcon>
-                      <ListItemText primary={strength} />
-                    </ListItem>
-                  ))}
-                  {analysis.performanceMetrics.weaknesses.map((weakness, index) => (
-                    <ListItem key={index}>
-                      <ListItemIcon>
-                        <Warning color="warning" />
-                      </ListItemIcon>
-                      <ListItemText primary={weakness} />
-                    </ListItem>
-                  ))}
-                </List>
+                {analysis.performanceMetrics.strengths.length === 0 && analysis.performanceMetrics.weaknesses.length === 0 ? (
+                  <Alert severity="info">
+                    Complete more assessments to see detailed performance breakdown.
+                  </Alert>
+                ) : (
+                  <List>
+                    {analysis.performanceMetrics.strengths.map((strength, index) => (
+                      <ListItem key={index}>
+                        <ListItemIcon>
+                          <CheckCircle color="success" />
+                        </ListItemIcon>
+                        <ListItemText primary={strength} />
+                      </ListItem>
+                    ))}
+                    {analysis.performanceMetrics.weaknesses.map((weakness, index) => (
+                      <ListItem key={index}>
+                        <ListItemIcon>
+                          <Warning color="warning" />
+                        </ListItemIcon>
+                        <ListItemText primary={weakness} />
+                      </ListItem>
+                    ))}
+                  </List>
+                )}
               </Paper>
             </Grid>
 
@@ -391,8 +405,13 @@ const AssessmentResultsPage: React.FC = () => {
               <Speed sx={{ mr: 1, verticalAlign: 'middle' }} />
               Personalized Training Recommendations
             </Typography>
-            <Grid container spacing={2} sx={{ mt: 1 }}>
-              {analysis.recommendations.map((recommendation, index) => (
+            {analysis.recommendations.length === 0 ? (
+              <Alert severity="info" sx={{ mt: 2 }}>
+                No training recommendations available yet. Complete more assessments to get personalized training plans.
+              </Alert>
+            ) : (
+              <Grid container spacing={2} sx={{ mt: 1 }}>
+                {analysis.recommendations.map((recommendation, index) => (
                 <Grid item xs={12} md={6} key={index}>
                   <Card variant="outlined" sx={{ height: '100%' }}>
                     <CardContent>
@@ -430,7 +449,8 @@ const AssessmentResultsPage: React.FC = () => {
                   </Card>
                 </Grid>
               ))}
-            </Grid>
+              </Grid>
+            )}
           </Paper>
         </>
       )}

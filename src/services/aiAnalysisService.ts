@@ -54,13 +54,13 @@ class AIAnalysisService {
   private calculatePercentile(score: number, testType: TestType): number {
     // Simulated percentile calculation based on test type and score
     const basePercentile = Math.min(95, Math.max(5, score));
-    const testMultiplier = {
-      [TestType.SPEED]: 1.1,
-      [TestType.AGILITY]: 1.0,
-      [TestType.STRENGTH]: 0.95,
-      [TestType.ENDURANCE]: 1.05,
-      [TestType.FLEXIBILITY]: 0.9,
-      [TestType.BALANCE]: 1.0
+    const testMultiplier: Partial<Record<TestType, number>> = {
+      [TestType.TENNIS_STANDING_START]: 1.1,
+      [TestType.FOUR_X_10M_SHUTTLE_RUN]: 1.0,
+      [TestType.MEDICINE_BALL_THROW]: 0.95,
+      [TestType.ENDURANCE_RUN]: 1.05,
+      [TestType.SIT_AND_REACH]: 0.9,
+      [TestType.STANDING_VERTICAL_JUMP]: 1.0
     };
     
     return Math.round(basePercentile * (testMultiplier[testType] || 1.0));
@@ -70,7 +70,7 @@ class AIAnalysisService {
     const insights: AIInsight[] = [];
     const score = assessment.score;
     
-    // Performance-based insights
+    // Performance-based insights - Always provide at least one
     if (score >= 85) {
       insights.push({
         category: 'strength',
@@ -87,7 +87,15 @@ class AIAnalysisService {
         priority: 'medium',
         icon: '💪'
       });
-    } else if (score < 50) {
+    } else if (score >= 50) {
+      insights.push({
+        category: 'improvement',
+        title: 'Average Performance',
+        description: `Your ${assessment.testType.toLowerCase()} score is in the average range. Consistent training will show improvements.`,
+        priority: 'medium',
+        icon: '📊'
+      });
+    } else {
       insights.push({
         category: 'weakness',
         title: 'Area for Improvement',
@@ -96,10 +104,21 @@ class AIAnalysisService {
         icon: '⚠️'
       });
     }
+    
+    // Always add a second insight for context
+    insights.push({
+      category: 'improvement',
+      title: 'Training Focus',
+      description: score >= 70 
+        ? `Maintain your ${assessment.testType.toLowerCase()} performance with consistent training.`
+        : `Focus on ${assessment.testType.toLowerCase()} specific exercises to see rapid improvements.`,
+      priority: score >= 70 ? 'low' : 'high',
+      icon: '🎯'
+    });
 
     // Test-specific insights
     switch (assessment.testType) {
-      case TestType.SPEED:
+      case TestType.TENNIS_STANDING_START:
         if (score < 60) {
           insights.push({
             category: 'improvement',
@@ -111,7 +130,7 @@ class AIAnalysisService {
         }
         break;
         
-      case TestType.FLEXIBILITY:
+      case TestType.SIT_AND_REACH:
         if (score < 55) {
           insights.push({
             category: 'risk',
@@ -123,7 +142,7 @@ class AIAnalysisService {
         }
         break;
         
-      case TestType.ENDURANCE:
+      case TestType.ENDURANCE_RUN:
         if (score >= 80) {
           insights.push({
             category: 'strength',
@@ -173,7 +192,7 @@ class AIAnalysisService {
 
     // Test-specific recommendations
     switch (assessment.testType) {
-      case TestType.SPEED:
+      case TestType.TENNIS_STANDING_START:
         if (score < 70) {
           recommendations.push({
             category: 'strength',
@@ -191,7 +210,7 @@ class AIAnalysisService {
         }
         break;
 
-      case TestType.AGILITY:
+      case TestType.FOUR_X_10M_SHUTTLE_RUN:
         if (score < 65) {
           recommendations.push({
             category: 'technique',
@@ -209,7 +228,7 @@ class AIAnalysisService {
         }
         break;
 
-      case TestType.STRENGTH:
+      case TestType.MEDICINE_BALL_THROW:
         if (score < 60) {
           recommendations.push({
             category: 'strength',
@@ -227,7 +246,7 @@ class AIAnalysisService {
         }
         break;
 
-      case TestType.ENDURANCE:
+      case TestType.ENDURANCE_RUN:
         if (score < 65) {
           recommendations.push({
             category: 'endurance',
@@ -245,7 +264,7 @@ class AIAnalysisService {
         }
         break;
 
-      case TestType.FLEXIBILITY:
+      case TestType.SIT_AND_REACH:
         if (score < 60) {
           recommendations.push({
             category: 'flexibility',
@@ -263,7 +282,7 @@ class AIAnalysisService {
         }
         break;
 
-      case TestType.BALANCE:
+      case TestType.STANDING_VERTICAL_JUMP:
         if (score < 65) {
           recommendations.push({
             category: 'technique',
@@ -281,22 +300,27 @@ class AIAnalysisService {
         }
       }
 
-    // General recommendations based on score
-    if (score >= 80) {
-      recommendations.push({
-        category: 'recovery',
-        title: 'Performance Maintenance',
-        description: 'Maintain current level with recovery-focused training',
-        exercises: [
-          'Active Recovery Sessions',
-          'Maintenance Training (2x/week)',
-          'Sleep Optimization',
-          'Nutrition Planning'
-        ],
-        priority: 'medium',
-        duration: 'Ongoing'
-      });
-    }
+    // Always add at least one general recommendation
+    recommendations.push({
+      category: score >= 80 ? 'recovery' : 'technique',
+      title: score >= 80 ? 'Performance Maintenance' : 'Training Fundamentals',
+      description: score >= 80
+        ? 'Maintain current level with recovery-focused training'
+        : 'Focus on proper technique and consistent training to improve',
+      exercises: score >= 80 ? [
+        'Active Recovery Sessions',
+        'Maintenance Training (2x/week)',
+        'Sleep Optimization (8-9 hours)',
+        'Nutrition Planning'
+      ] : [
+        'Proper warm-up before training',
+        'Focus on technique over intensity',
+        'Progressive overload principle',
+        'Adequate rest and recovery'
+      ],
+      priority: 'medium',
+      duration: score >= 80 ? 'Ongoing' : '4-6 weeks'
+    });
 
     return recommendations;
   }
@@ -382,11 +406,11 @@ class AIAnalysisService {
   private getRiskFactors(score: number, testType: TestType): string[] {
     const risks: string[] = [];
     
-    if (testType === TestType.FLEXIBILITY && score < 50) {
+    if (testType === TestType.SIT_AND_REACH && score < 50) {
       risks.push('Increased injury risk');
       risks.push('Limited range of motion');
     }
-    if (testType === TestType.BALANCE && score < 55) {
+    if (testType === TestType.STANDING_VERTICAL_JUMP && score < 55) {
       risks.push('Fall risk during activities');
     }
     if (score < 40) {
@@ -409,16 +433,16 @@ class AIAnalysisService {
 
   private getPeerAverage(testType: TestType, sports: SportType[]): number {
     // Simulated peer averages
-    const baseAverages = {
-      [TestType.SPEED]: 68,
-      [TestType.AGILITY]: 65,
-      [TestType.STRENGTH]: 70,
-      [TestType.ENDURANCE]: 72,
-      [TestType.FLEXIBILITY]: 60,
-      [TestType.BALANCE]: 66
+    const baseAverages: Partial<Record<TestType, number>> = {
+      [TestType.TENNIS_STANDING_START]: 68,
+      [TestType.FOUR_X_10M_SHUTTLE_RUN]: 65,
+      [TestType.MEDICINE_BALL_THROW]: 70,
+      [TestType.ENDURANCE_RUN]: 72,
+      [TestType.SIT_AND_REACH]: 60,
+      [TestType.STANDING_VERTICAL_JUMP]: 66
     };
     
-    return baseAverages[testType] + Math.random() * 6 - 3;
+    return (baseAverages[testType] || 65) + Math.random() * 6 - 3;
   }
 
   private getSportAverage(testType: TestType, sports: SportType[]): number {
@@ -427,16 +451,16 @@ class AIAnalysisService {
   }
 
   private getEliteLevel(testType: TestType): number {
-    const eliteLevels = {
-      [TestType.SPEED]: 88,
-      [TestType.AGILITY]: 85,
-      [TestType.STRENGTH]: 90,
-      [TestType.ENDURANCE]: 92,
-      [TestType.FLEXIBILITY]: 82,
-      [TestType.BALANCE]: 87
+    const eliteLevels: Partial<Record<TestType, number>> = {
+      [TestType.TENNIS_STANDING_START]: 88,
+      [TestType.FOUR_X_10M_SHUTTLE_RUN]: 85,
+      [TestType.MEDICINE_BALL_THROW]: 90,
+      [TestType.ENDURANCE_RUN]: 92,
+      [TestType.SIT_AND_REACH]: 82,
+      [TestType.STANDING_VERTICAL_JUMP]: 87
     };
     
-    return eliteLevels[testType];
+    return eliteLevels[testType] || 85;
   }
 }
 

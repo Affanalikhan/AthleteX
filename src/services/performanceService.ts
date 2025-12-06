@@ -49,41 +49,80 @@ class PerformanceService {
   }
 
   getMetricDisplayInfo(metricType: MetricType) {
-    const metricInfo = {
-      [MetricType.TIMING_100M]: {
-        label: '100m Sprint',
-        unit: 'seconds',
-        format: (value: number) => `${value}s`,
-        betterDirection: 'lower'
-      },
-      [MetricType.TIMING_200M]: {
-        label: '200m Sprint',
-        unit: 'seconds',
-        format: (value: number) => `${value}s`,
-        betterDirection: 'lower'
-      },
-      [MetricType.TIMING_800M]: {
-        label: '800m Run',
-        unit: 'seconds',
-        format: (value: number) => `${Math.floor(value / 60)}:${(value % 60).toFixed(1).padStart(4, '0')}`,
-        betterDirection: 'lower'
-      },
-      [MetricType.LONG_JUMP]: {
-        label: 'Long Jump',
-        unit: 'meters',
-        format: (value: number) => `${value}m`,
+    const metricInfo: Partial<Record<MetricType, {
+      label: string;
+      unit: string;
+      format: (value: number) => string;
+      betterDirection: string;
+    }>> = {
+      [MetricType.HEIGHT]: {
+        label: 'Height',
+        unit: 'cm',
+        format: (value: number) => `${value} cm`,
         betterDirection: 'higher'
       },
-      [MetricType.SHOT_PUT_DISTANCE]: {
-        label: 'Shot Put',
-        unit: 'meters',
-        format: (value: number) => `${value}m`,
+      [MetricType.WEIGHT]: {
+        label: 'Weight',
+        unit: 'kg',
+        format: (value: number) => `${value} kg`,
+        betterDirection: 'neutral'
+      },
+      [MetricType.SIT_AND_REACH]: {
+        label: 'Sit and Reach',
+        unit: 'cm',
+        format: (value: number) => `${value} cm`,
         betterDirection: 'higher'
+      },
+      [MetricType.STANDING_VERTICAL_JUMP]: {
+        label: 'Standing Vertical Jump',
+        unit: 'cm',
+        format: (value: number) => `${value} cm`,
+        betterDirection: 'higher'
+      },
+      [MetricType.STANDING_BROAD_JUMP]: {
+        label: 'Standing Broad Jump',
+        unit: 'cm',
+        format: (value: number) => `${value} cm`,
+        betterDirection: 'higher'
+      },
+      [MetricType.MEDICINE_BALL_THROW]: {
+        label: 'Medicine Ball Throw',
+        unit: 'meters',
+        format: (value: number) => `${value} m`,
+        betterDirection: 'higher'
+      },
+      [MetricType.TENNIS_STANDING_START]: {
+        label: 'Tennis Standing Start',
+        unit: 'seconds',
+        format: (value: number) => `${value} s`,
+        betterDirection: 'lower'
+      },
+      [MetricType.FOUR_X_10M_SHUTTLE_RUN]: {
+        label: '4 x 10m Shuttle Run',
+        unit: 'seconds',
+        format: (value: number) => `${value} s`,
+        betterDirection: 'lower'
+      },
+      [MetricType.SIT_UPS]: {
+        label: 'Sit Ups',
+        unit: 'reps',
+        format: (value: number) => `${value} reps`,
+        betterDirection: 'higher'
+      },
+      [MetricType.ENDURANCE_RUN]: {
+        label: 'Endurance Run',
+        unit: 'seconds',
+        format: (value: number) => {
+          const minutes = Math.floor(value / 60);
+          const seconds = Math.floor(value % 60);
+          return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        },
+        betterDirection: 'lower'
       }
     };
 
     return metricInfo[metricType] || {
-      label: metricType,
+      label: metricType.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
       unit: '',
       format: (value: number) => value.toString(),
       betterDirection: 'higher'

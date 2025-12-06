@@ -1,0 +1,10 @@
+# Netlify Redirects for AthleteX SPA
+
+# Redirect all routes to index.html for React Router
+/*    /index.html   200
+
+# API proxy (if needed in future)
+# /api/*  https://your-api.com/:splat  200
+
+# Force HTTPS
+http://*  https://:splat  301!

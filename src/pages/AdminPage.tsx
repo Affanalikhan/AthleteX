@@ -449,7 +449,7 @@ const AdminPage: React.FC = () => {
         <Button
           variant="outlined"
           startIcon={<AccountBalance />}
-          onClick={() => window.open('/admin/sai-login', '_blank')}
+          onClick={() => window.open('/sai-portal', '_blank')}
           sx={{ fontWeight: 'bold' }}
         >
           SAI Cloud Portal

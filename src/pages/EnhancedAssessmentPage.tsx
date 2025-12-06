@@ -106,7 +106,7 @@ const EnhancedAssessmentPage: React.FC = () => {
   const form = useForm<AssessmentForm>({
     resolver: yupResolver(assessmentSchema) as any,
     defaultValues: { 
-      testType: TestType.SPEED, 
+      testType: TestType.TENNIS_STANDING_START, 
       analysisMode: 'enhanced',
       notes: '' 
     }

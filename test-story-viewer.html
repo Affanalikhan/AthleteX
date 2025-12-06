@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story Viewer Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .test-section {
+            background: #f5f5f5;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        button {
+            background: #00f5ff;
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #00d4dd;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+        .success { color: green; }
+        .error { color: red; }
+        .info { color: blue; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Story Viewer Diagnostic Tool</h1>
+    <p>Use this page to test if stories are working correctly.</p>
+
+    <div class="test-section">
+        <h2>Test 1: Check LocalStorage</h2>
+        <button onclick="testLocalStorage()">Run Test</button>
+        <div id="test1-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 2: Load Stories</h2>
+        <button onclick="testLoadStories()">Run Test</button>
+        <div id="test2-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 3: Clear & Reset</h2>
+        <button onclick="clearData()">Clear All Data</button>
+        <button onclick="resetToDefaults()">Reset to Defaults</button>
+        <div id="test3-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 4: View Story Data</h2>
+        <button onclick="viewStoryData()">View All Stories</button>
+        <div id="test4-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Quick Actions</h2>
+        <button onclick="window.location.href='/social'">Go to Social Page</button>
+        <button onclick="window.location.reload()">Refresh Page</button>
+    </div>
+
+    <script>
+        function testLocalStorage() {
+            const result = document.getElementById('test1-result');
+            try {
+                const stories = localStorage.getItem('athletex_social_stories');
+                const posts = localStorage.getItem('athletex_social_posts');
+                const profiles = localStorage.getItem('athletex_social_profiles');
+
+                let html = '<div class="info">LocalStorage Check:</div>';
+                html += `<div>Stories: ${stories ? '✅ Found' : '❌ Not found'}</div>`;
+                html += `<div>Posts: ${posts ? '✅ Found' : '❌ Not found'}</div>`;
+                html += `<div>Profiles: ${profiles ? '✅ Found' : '❌ Not found'}</div>`;
+
+                if (stories) {
+                    const storiesArray = JSON.parse(stories);
+                    html += `<div class="success">Stories count: ${storiesArray.length}</div>`;
+                }
+
+                result.innerHTML = html;
+            } catch (error) {
+                result.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+
+        function testLoadStories() {
+            const result = document.getElementById('test2-result');
+            try {
+                const stories = localStorage.getItem('athletex_social_stories');
+                
+                if (!stories) {
+                    result.innerHTML = '<div class="error">No stories found in localStorage</div>';
+                    return;
+                }
+
+                const storiesArray = JSON.parse(stories);
+                let html = `<div class="success">Found ${storiesArray.length} stories:</div>`;
+                
+                storiesArray.slice(0, 5).forEach((story, i) => {
+                    html += `<div>${i + 1}. ${story.userName} (ID: ${story.id})</div>`;
+                });
+
+                if (storiesArray.length > 5) {
+                    html += `<div>... and ${storiesArray.length - 5} more</div>`;
+                }
+
+                result.innerHTML = html;
+            } catch (error) {
+                result.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+
+        function clearData() {
+            const result = document.getElementById('test3-result');
+            try {
+                localStorage.removeItem('athletex_social_stories');
+                localStorage.removeItem('athletex_social_posts');
+                localStorage.removeItem('athletex_social_profiles');
+                result.innerHTML = '<div class="success">✅ All social data cleared!</div>';
+            } catch (error) {
+                result.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+
+        function resetToDefaults() {
+            const result = document.getElementById('test3-result');
+            try {
+                // Clear existing data
+                localStorage.removeItem('athletex_social_stories');
+                localStorage.removeItem('athletex_social_posts');
+                localStorage.removeItem('athletex_social_profiles');
+                
+                result.innerHTML = '<div class="success">✅ Data cleared! Refresh the app to load defaults.</div>';
+                
+                setTimeout(() => {
+                    if (confirm('Redirect to Social page to load defaults?')) {
+                        window.location.href = '/social';
+                    }
+                }, 1000);
+            } catch (error) {
+                result.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+
+        function viewStoryData() {
+            const result = document.getElementById('test4-result');
+            try {
+                const stories = localStorage.getItem('athletex_social_stories');
+                
+                if (!stories) {
+                    result.innerHTML = '<div class="error">No stories found</div>';
+                    return;
+                }
+
+                const storiesArray = JSON.parse(stories);
+                let html = '<div class="info">Story Details:</div>';
+                
+                storiesArray.forEach((story, i) => {
+                    html += `
+                        <div style="margin: 10px 0; padding: 10px; background: #f9f9f9; border-left: 3px solid #00f5ff;">
+                            <strong>${i + 1}. ${story.userName}</strong><br>
+                            ID: ${story.id}<br>
+                            Views: ${story.views ? story.views.length : 0}<br>
+                            Expires: ${new Date(story.expiresAt).toLocaleString()}<br>
+                            Media: ${story.mediaUrl ? '✅' : '❌'}
+                        </div>
+                    `;
+                });
+
+                result.innerHTML = html;
+            } catch (error) {
+                result.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+
+        // Auto-run first test on load
+        window.onload = () => {
+            testLocalStorage();
+        };
+    </script>
+</body>
+</html>

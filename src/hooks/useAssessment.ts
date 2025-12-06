@@ -19,6 +19,15 @@ export const useAssessment = () => {
     uploading: false
   });
 
+  // Get the latest assessment for each test type
+  const latestAssessments = state.assessments.reduce<Record<string, AssessmentTest>>((acc, assessment) => {
+    const existing = acc[assessment.testType];
+    if (!existing || new Date(assessment.timestamp) > new Date(existing.timestamp)) {
+      acc[assessment.testType] = assessment;
+    }
+    return acc;
+  }, {});
+
   useEffect(() => {
     if (user?.uid) {
       loadAssessments();
@@ -38,7 +47,18 @@ export const useAssessment = () => {
     }
   };
 
-  const createAssessment = async (testType: TestType, videoFile: File, notes: string = '') => {
+  const createAssessment = async (
+    testType: TestType, 
+    videoFile: File, 
+    notes: string = '',
+    manualMeasurements?: {
+      timeTaken?: number;
+      distance?: number;
+      height?: number;
+      weight?: number;
+      reps?: number;
+    }
+  ) => {
     if (!user?.uid) {
       throw new Error('User not authenticated');
     }
@@ -50,7 +70,8 @@ export const useAssessment = () => {
         user.uid, 
         testType, 
         videoFile, 
-        notes
+        notes,
+        manualMeasurements
       );
 
       // Add new assessment to the beginning of the list
@@ -115,6 +136,7 @@ export const useAssessment = () => {
 
   return {
     assessments: state.assessments,
+    latestAssessments, // Add the latestAssessments to the returned object
     loading: state.loading,
     error: state.error,
     uploading: state.uploading,

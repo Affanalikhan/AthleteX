@@ -37,6 +37,7 @@ interface ProfileForm {
   state: string;
   city: string;
   pinCode: string;
+  dietPreference: 'vegetarian' | 'non-vegetarian' | 'vegan' | 'other';
 }
 
 const profileSchema = yup.object({
@@ -62,7 +63,10 @@ const profileSchema = yup.object({
   city: yup.string().required('City is required'),
   pinCode: yup.string()
     .matches(/^\d{4,10}$/, 'Please enter a valid pin code')
-    .required('Pin code is required')
+    .required('Pin code is required'),
+  dietPreference: yup.string()
+    .oneOf(['vegetarian', 'non-vegetarian', 'vegan', 'other'], 'Please select a valid diet preference')
+    .required('Diet preference is required')
 }).required() as yup.ObjectSchema<ProfileForm>;
 
 const SPORTS_OPTIONS = [
@@ -90,7 +94,7 @@ const ProfilePage: React.FC = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-const form = useForm<ProfileForm>({
+  const form = useForm<ProfileForm>({
     resolver: yupResolver(profileSchema) as unknown as Resolver<ProfileForm>,
     defaultValues: {
       name: '',
@@ -102,9 +106,25 @@ const form = useForm<ProfileForm>({
       country: '',
       state: '',
       city: '',
-      pinCode: ''
+      pinCode: '',
+      dietPreference: 'vegetarian'
     }
   });
+
+  // Calculate BMI
+  const calculateBMI = (weight: number, height: number): number => {
+    // Convert height from cm to meters
+    const heightInMeters = height / 100;
+    return weight / (heightInMeters * heightInMeters);
+  };
+
+  // Get BMI category
+  const getBMICategory = (bmi: number): string => {
+    if (bmi < 18.5) return 'Underweight';
+    if (bmi < 25) return 'Normal weight';
+    if (bmi < 30) return 'Overweight';
+    return 'Obese';
+  };
 
   // Update form when profile loads
   React.useEffect(() => {
@@ -119,12 +139,13 @@ const form = useForm<ProfileForm>({
         country: profile.country,
         state: profile.state,
         city: profile.city,
-        pinCode: profile.pinCode
+        pinCode: profile.pinCode,
+        dietPreference: profile.dietPreference || 'vegetarian'
       });
     }
   }, [profile, form]);
 
-const handleSubmit: SubmitHandler<ProfileForm> = async (data) => {
+  const handleSubmit: SubmitHandler<ProfileForm> = async (data) => {
     try {
       clearError();
       if (profile) {
@@ -188,8 +209,19 @@ const handleSubmit: SubmitHandler<ProfileForm> = async (data) => {
     <Container maxWidth="md" sx={{ py: 4 }}>
       <Paper elevation={3} sx={{ p: 4 }}>
         <Typography variant="h4" component="h1" gutterBottom>
-          {profile ? 'Edit Profile' : 'Create Your Profile'}
+          {profile ? 'Edit Profile' : 'Complete Your Profile'}
         </Typography>
+        
+        {!profile && (
+          <Alert severity="info" sx={{ mb: 3 }}>
+            <Typography variant="subtitle2" gutterBottom>
+              Welcome to AthleteX! 🎉
+            </Typography>
+            <Typography variant="body2">
+              Please complete your profile to get personalized training recommendations and track your performance.
+            </Typography>
+          </Alert>
+        )}
 
         {error && (
           <Alert severity="error" sx={{ mb: 2 }} onClose={clearError}>
@@ -293,14 +325,30 @@ const handleSubmit: SubmitHandler<ProfileForm> = async (data) => {
             </Grid>
 
             <Grid item xs={12} sm={4}>
-              <TextField
-                {...form.register('height')}
-                error={!!form.formState.errors.height}
-                helperText={form.formState.errors.height?.message}
-                label="Height (cm)"
-                type="number"
-                fullWidth
-                required
+              <Controller
+                name="height"
+                control={form.control}
+                render={({ field, fieldState: { error } }) => {
+                  const weight = form.watch('weight');
+                  const height = parseFloat(String(field.value)) || 0;
+                  const bmi = weight > 0 && height > 0 ? calculateBMI(weight, height) : 0;
+                  const bmiCategory = bmi > 0 ? getBMICategory(bmi) : '';
+                  
+                  return (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      label="Height (cm)"
+                      type="number"
+                      error={!!error}
+                      helperText={error?.message || (bmi > 0 && `BMI: ${bmi.toFixed(1)} (${bmiCategory})`)}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        form.trigger('weight');
+                      }}
+                    />
+                  );
+                }}
               />
             </Grid>
 
@@ -335,6 +383,29 @@ const handleSubmit: SubmitHandler<ProfileForm> = async (data) => {
                         {form.formState.errors.sportsPlayed.message}
                       </Typography>
                     )}
+                  </FormControl>
+                )}
+              />
+            </Grid>
+
+            {/* Diet Preference */}
+            <Grid item xs={12}>
+              <Typography variant="h6" gutterBottom>
+                Diet Preference
+              </Typography>
+              <Controller
+                name="dietPreference"
+                control={form.control}
+                render={({ field }) => (
+                  <FormControl fullWidth>
+                    <InputLabel>Diet Preference</InputLabel>
+                    <Select
+                      {...field}
+                      label="Diet Preference"
+                    >
+                      <MenuItem value="vegetarian">Vegetarian</MenuItem>
+                      <MenuItem value="non-vegetarian">Non-Vegetarian</MenuItem>
+                    </Select>
                   </FormControl>
                 )}
               />

@@ -137,14 +137,8 @@ class EnhancedAssessmentService {
 
           movementAnalysis = await videoAnalysisEngine.analyzeVideo(
             videoFile,
-            assessment,
             athlete,
-            {
-              detailedBiomechanics: defaultOptions.detailedBiomechanics,
-              integrityCheck: false, // Already done above
-              performanceMetrics: defaultOptions.enablePerformanceAnalysis,
-              qualityAssessment: true
-            }
+            assessment.testType
           );
 
         } catch (error) {

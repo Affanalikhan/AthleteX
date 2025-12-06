@@ -725,17 +725,17 @@ class BenchmarkingService {
 
   private generateBenchmark(ageGroup: string, gender: string, testType: TestType): BenchmarkProfile {
     // Base scores for different test types
-    const baseScores = {
-      [TestType.SPEED]: { male: 75, female: 70 },
-      [TestType.AGILITY]: { male: 72, female: 74 },
-      [TestType.STRENGTH]: { male: 78, female: 70 },
-      [TestType.ENDURANCE]: { male: 70, female: 72 },
-      [TestType.FLEXIBILITY]: { male: 65, female: 75 },
-      [TestType.BALANCE]: { male: 70, female: 73 }
+    const baseScores: Partial<Record<TestType, { male: number; female: number }>> = {
+      [TestType.TENNIS_STANDING_START]: { male: 75, female: 70 },
+      [TestType.FOUR_X_10M_SHUTTLE_RUN]: { male: 72, female: 74 },
+      [TestType.MEDICINE_BALL_THROW]: { male: 78, female: 70 },
+      [TestType.ENDURANCE_RUN]: { male: 70, female: 72 },
+      [TestType.SIT_AND_REACH]: { male: 65, female: 75 },
+      [TestType.STANDING_VERTICAL_JUMP]: { male: 70, female: 73 }
     };
 
     const genderKey = gender as 'male' | 'female';
-    const baseScore = baseScores[testType][genderKey];
+    const baseScore = (baseScores[testType] || { male: 70, female: 70 })[genderKey];
     
     // Age adjustments
     const ageAdjustments: { [key: string]: number } = {

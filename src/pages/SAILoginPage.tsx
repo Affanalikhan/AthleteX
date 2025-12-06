@@ -34,6 +34,7 @@ import {
   Phone,
   CheckCircle,
   Policy,
+  Home,
 } from '@mui/icons-material';
 import saiCloudService from '../services/saiCloudService';
 
@@ -143,9 +144,9 @@ const SAILoginPage: React.FC = () => {
 
       setStep('success');
       
-      // Redirect to SAI dashboard after short delay
+      // Redirect to SAI portal after short delay
       setTimeout(() => {
-        navigate('/admin/sai-dashboard');
+        navigate('/sai-portal');
       }, 2000);
     } catch (error) {
       setGeneralError('Invalid OTP or authentication failed. Please try again.');
@@ -162,10 +163,10 @@ const SAILoginPage: React.FC = () => {
   const renderCredentialsStep = () => (
     <Box component="form" onSubmit={handleCredentialsSubmit}>
       <Box sx={{ mb: 3 }}>
-        <Typography variant="h4" component="h1" gutterBottom fontWeight="bold">
+        <Typography variant="h4" component="h1" gutterBottom fontWeight="bold" sx={{ color: '#00f5ff' }}>
           SAI Official Login
         </Typography>
-        <Typography variant="body1" color="text.secondary">
+        <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
           Sports Authority of India - Talent Identification Platform
         </Typography>
       </Box>
@@ -236,15 +237,7 @@ const SAILoginPage: React.FC = () => {
         {loading ? 'Sending OTP...' : 'Send OTP'}
       </Button>
 
-      <Box textAlign="center">
-        <Button
-          startIcon={<ArrowBack />}
-          onClick={() => navigate('/admin/login')}
-          color="inherit"
-        >
-          Back to Admin Login
-        </Button>
-      </Box>
+
     </Box>
   );
 
@@ -333,24 +326,103 @@ const SAILoginPage: React.FC = () => {
       </Typography>
       <LinearProgress color="success" sx={{ mb: 2 }} />
       <Typography variant="caption" color="text.secondary">
-        Redirecting to dashboard...
+        Redirecting to SAI Portal...
       </Typography>
     </Box>
   );
 
   return (
-    <Container maxWidth="sm" sx={{ py: 8 }}>
-      <Paper elevation={6} sx={{ p: 4, borderRadius: 3 }}>
+    <Box
+      sx={{
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%)',
+        position: 'relative',
+      }}
+    >
+      {/* Top Navigation Bar */}
+      <Box
+        sx={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 1000,
+          background: 'rgba(10, 10, 10, 0.95)',
+          backdropFilter: 'blur(20px)',
+          borderBottom: '1px solid rgba(0, 245, 255, 0.2)',
+          py: 2,
+        }}
+      >
+        <Container maxWidth="xl">
+          <Box display="flex" alignItems="center" justifyContent="space-between">
+            <Box display="flex" alignItems="center" gap={2}>
+              <AccountBalance sx={{ fontSize: 32, color: '#00f5ff' }} />
+              <Typography variant="h5" fontWeight="bold" sx={{ color: '#00f5ff' }}>
+                SAI Login Portal
+              </Typography>
+            </Box>
+            
+            <Button
+              variant="contained"
+              startIcon={<Home />}
+              onClick={() => navigate('/')}
+              sx={{
+                fontWeight: 'bold',
+                px: 3,
+                py: 1,
+                borderRadius: 2,
+                boxShadow: '0 4px 14px rgba(0, 245, 255, 0.25)',
+                background: 'linear-gradient(135deg, #00f5ff 0%, #0080ff 100%)',
+                color: '#000',
+                '&:hover': {
+                  boxShadow: '0 6px 20px rgba(0, 245, 255, 0.35)',
+                  transform: 'translateY(-1px)',
+                  background: 'linear-gradient(135deg, #00c4cc 0%, #0066cc 100%)',
+                },
+              }}
+            >
+              Back to Main Page
+            </Button>
+          </Box>
+        </Container>
+      </Box>
+
+      <Container maxWidth="sm" sx={{ py: 8 }}>
+        <Paper 
+          elevation={12} 
+          sx={{ 
+            p: 4, 
+            borderRadius: 3,
+            background: 'rgba(255, 255, 255, 0.05)',
+            backdropFilter: 'blur(20px)',
+            border: '1px solid rgba(0, 245, 255, 0.2)',
+          }}
+        >
         {/* Header with SAI Branding */}
         <Box display="flex" alignItems="center" justifyContent="center" sx={{ mb: 4 }}>
-          <AccountBalance color="primary" sx={{ fontSize: 40, mr: 2 }} />
-          <Box>
-            <Typography variant="h6" fontWeight="bold" color="primary">
+          <AccountBalance sx={{ fontSize: 40, mr: 2, color: '#00f5ff' }} />
+          <Box textAlign="center">
+            <Typography variant="h6" fontWeight="bold" sx={{ color: '#00f5ff' }}>
               Sports Authority of India
             </Typography>
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
               Talent Identification Portal
             </Typography>
+            <Box sx={{ mt: 1 }}>
+              <Button
+                variant="text"
+                size="small"
+                onClick={() => navigate('/sai-portal')}
+                sx={{
+                  color: '#00f5ff',
+                  textTransform: 'none',
+                  fontSize: '0.75rem',
+                  '&:hover': {
+                    backgroundColor: 'rgba(0, 245, 255, 0.1)',
+                  },
+                }}
+              >
+                View SAI Portal Overview
+              </Button>
+            </Box>
           </Box>
         </Box>
 
@@ -393,19 +465,27 @@ const SAILoginPage: React.FC = () => {
             </Card>
           </>
         )}
-      </Paper>
+        </Paper>
 
-      {/* Demo Instructions */}
-      {process.env.NODE_ENV === 'development' && step === 'credentials' && (
-        <Alert severity="info" sx={{ mt: 3 }}>
-          <Typography variant="subtitle2" gutterBottom>Demo Instructions:</Typography>
-          <Typography variant="body2">
-            Use any Official ID in format <strong>SAI123456</strong> and any password (8+ characters).
-            Any 6-digit OTP will be accepted for demo purposes.
-          </Typography>
-        </Alert>
-      )}
-    </Container>
+        {/* Demo Instructions */}
+        {process.env.NODE_ENV === 'development' && step === 'credentials' && (
+          <Alert 
+            severity="info" 
+            sx={{ 
+              mt: 3,
+              background: 'rgba(255, 255, 255, 0.9)',
+              backdropFilter: 'blur(10px)',
+            }}
+          >
+            <Typography variant="subtitle2" gutterBottom>Demo Instructions:</Typography>
+            <Typography variant="body2">
+              Use any Official ID in format <strong>SAI123456</strong> and any password (8+ characters).
+              Any 6-digit OTP will be accepted for demo purposes.
+            </Typography>
+          </Alert>
+        )}
+      </Container>
+    </Box>
   );
 };
 

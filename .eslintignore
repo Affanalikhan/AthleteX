@@ -1,0 +1,7 @@
+# Ignore worker files
+src/workers/
+
+# Build output
+build/
+dist/
+node_modules/

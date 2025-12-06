@@ -15,6 +15,7 @@ export interface Athlete {
   pinCode: string;
   profilePictureUrl: string;
   location?: string;
+  dietPreference?: 'vegetarian' | 'non-vegetarian' | 'vegan' | 'other';
   createdAt: Date;
   updatedAt: Date;
 }
@@ -30,12 +31,46 @@ export interface AssessmentTest {
 }
 
 export enum TestType {
-  SPEED = 'speed',
-  AGILITY = 'agility',
-  STRENGTH = 'strength',
-  ENDURANCE = 'endurance',
-  FLEXIBILITY = 'flexibility',
-  BALANCE = 'balance'
+  // Fitness Assessment Tests (10 Tests from the table)
+  HEIGHT = 'height',                           // Test 1 - Height
+  WEIGHT = 'weight',                           // Test 2 - Weight  
+  SIT_AND_REACH = 'sit_and_reach',            // Test 3 - Sit and Reach (Flexibility)
+  STANDING_VERTICAL_JUMP = 'standing_vertical_jump', // Test 4 - Standing Vertical Jump (Lower Body Explosive Strength)
+  STANDING_BROAD_JUMP = 'standing_broad_jump', // Test 5 - Standing Broad Jump (Lower Body Explosive Strength)
+  MEDICINE_BALL_THROW = 'medicine_ball_throw', // Test 6 - Medicine Ball Throw (Upper Body Strength)
+  TENNIS_STANDING_START = 'tennis_standing_start', // Test 7 - Tennis Standing Start (Speed)
+  FOUR_X_10M_SHUTTLE_RUN = 'four_x_10m_shuttle_run', // Test 8 - 4 X 10 Mts Shuttle Run (Agility)
+  SIT_UPS = 'sit_ups',                        // Test 9 - Sit Ups (Core Strength)
+  ENDURANCE_RUN = 'endurance_run'             // Test 10 - 300m Run for U-12, 1.6km run for 12+ years (Endurance)
+}
+
+export interface TrainingPreferences {
+  id: string;
+  userId: string;
+  fitnessLevel: 'beginner' | 'intermediate' | 'advanced';
+  goals: string[];
+  availableTime: number; // in minutes
+  equipment: string[];
+  workoutDays: number[]; // 0-6 for Sunday-Saturday
+  preferredTimeOfDay: 'morning' | 'afternoon' | 'evening';
+  injuries: string[];
+  notes: string;
+}
+
+export interface AthleteProfile {
+  id: string;
+  userId: string;
+  age: number;
+  weight: number; // in kg
+  height: number; // in cm
+  gender: 'male' | 'female' | 'other' | 'prefer_not_to_say';
+  sports: string[];
+  primarySport: string;
+  trainingExperience: 'beginner' | 'intermediate' | 'advanced' | 'elite';
+  medicalConditions: string[];
+  injuries: string[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface PerformanceMetric {
@@ -49,11 +84,16 @@ export interface PerformanceMetric {
 }
 
 export enum MetricType {
-  TIMING_100M = 'timing_100m',
-  TIMING_200M = 'timing_200m',
-  TIMING_800M = 'timing_800m',
-  LONG_JUMP = 'long_jump',
-  SHOT_PUT_DISTANCE = 'shot_put_distance'
+  HEIGHT = 'height',
+  WEIGHT = 'weight',
+  SIT_AND_REACH = 'sit_and_reach',
+  STANDING_VERTICAL_JUMP = 'standing_vertical_jump',
+  STANDING_BROAD_JUMP = 'standing_broad_jump',
+  MEDICINE_BALL_THROW = 'medicine_ball_throw',
+  TENNIS_STANDING_START = 'tennis_standing_start',
+  FOUR_X_10M_SHUTTLE_RUN = 'four_x_10m_shuttle_run',
+  SIT_UPS = 'sit_ups',
+  ENDURANCE_RUN = 'endurance_run'
 }
 
 export interface TrainingProgram {
@@ -81,7 +121,22 @@ export enum SportType {
   HANDBALL = 'handball',
   ATHLETICS = 'athletics',
   HOCKEY = 'hockey',
-  KABADDI = 'kabaddi'
+  KABADDI = 'kabaddi',
+  CRICKET = 'cricket',
+  SWIMMING = 'swimming',
+  VOLLEYBALL = 'volleyball',
+  BADMINTON = 'badminton',
+  TENNIS = 'tennis',
+  BOXING = 'boxing',
+  WRESTLING = 'wrestling',
+  WEIGHTLIFTING = 'weightlifting',
+  GYMNASTICS = 'gymnastics',
+  CYCLING = 'cycling',
+  ROWING = 'rowing',
+  ARCHERY = 'archery',
+  SHOOTING = 'shooting',
+  JUDO = 'judo',
+  TAEKWONDO = 'taekwondo'
 }
 
 export enum DifficultyLevel {

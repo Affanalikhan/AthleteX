@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AthleteX - Route Tester</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #00f5ff;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 40px;
+        }
+        
+        .section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 245, 255, 0.2);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .section h2 {
+            color: #00f5ff;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        
+        .route-list {
+            list-style: none;
+        }
+        
+        .route-item {
+            margin-bottom: 15px;
+        }
+        
+        .route-link {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #00f5ff 0%, #0080ff 100%);
+            color: #000;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 14px rgba(0, 245, 255, 0.25);
+        }
+        
+        .route-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 245, 255, 0.35);
+        }
+        
+        .route-description {
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 5px;
+            font-size: 0.9em;
+        }
+        
+        .instructions {
+            background: rgba(255, 152, 0, 0.1);
+            border: 1px solid rgba(255, 152, 0, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .instructions h3 {
+            color: #ff9800;
+            margin-bottom: 10px;
+        }
+        
+        .instructions p {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            margin-left: 10px;
+        }
+        
+        .status.working {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+            border: 1px solid #4caf50;
+        }
+        
+        .status.testing {
+            background: rgba(255, 152, 0, 0.2);
+            color: #ff9800;
+            border: 1px solid #ff9800;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏃 AthleteX Route Tester</h1>
+        <p class="subtitle">Test all portal routes to verify deployment</p>
+        
+        <div class="instructions">
+            <h3>📋 How to Use:</h3>
+            <p>
+                1. Click on each link below to test if the route works<br>
+                2. If you see a proper page (not 404), the route is working ✅<br>
+                3. If you see "Cannot GET" or 404, there's a routing issue ❌<br>
+                4. Use your browser's back button to return here after testing
+            </p>
+        </div>
+        
+        <!-- Main Routes -->
+        <div class="section">
+            <h2>🏠 Main Routes</h2>
+            <ul class="route-list">
+                <li class="route-item">
+                    <a href="/" class="route-link">Home / Landing Page</a>
+                    <span class="status working">Should Always Work</span>
+                    <p class="route-description">Main landing page of the application</p>
+                </li>
+                <li class="route-item">
+                    <a href="/login" class="route-link">Athlete Login</a>
+                    <span class="status working">Should Work</span>
+                    <p class="route-description">Login page for athletes</p>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Trainer Routes -->
+        <div class="section">
+            <h2>👨‍🏫 Trainer Portal Routes</h2>
+            <ul class="route-list">
+                <li class="route-item">
+                    <a href="/trainer/login" class="route-link">Trainer Login</a>
+                    <span class="status testing">Test This</span>
+                    <p class="route-description">Login page for trainers/coaches</p>
+                </li>
+                <li class="route-item">
+                    <a href="/trainer/register" class="route-link">Trainer Registration</a>
+                    <span class="status testing">Test This</span>
+                    <p class="route-description">Registration page for new trainers</p>
+                </li>
+                <li class="route-item">
+                    <a href="/trainer/dashboard" class="route-link">Trainer Dashboard</a>
+                    <span class="status testing">Test This</span>
+                    <p class="route-description">Main dashboard for trainers (requires login)</p>
+                </li>
+                <li class="route-item">
+                    <a href="/trainer/profile" class="route-link">Trainer Profile</a>
+                    <span class="status testing">Test This</span>
+                    <p class="route-description">Trainer profile page</p>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- SAI Routes -->
+        <div class="section">
+            <h2>🏛️ SAI Portal Routes</h2>
+            <ul class="route-list">
+                <li class="route-item">
+                    <a href="/sai-login" class="route-link">SAI Login</a>
+                    <span class="status testing">Test This</span>
+                    <p class="route-description">Login page for SAI officials</p>
+                </li>
+                <li class="route-item">
+                    <a href="/sai-portal" class="route-link">SAI Cloud Portal</a>
+                    <span class="status testing">Test This</span>
+                    <p class="route-description">Main SAI administrative portal</p>
+                </li>
+                <li class="route-item">
+                    <a href="/sai/dashboard" class="route-link">SAI Dashboard</a>
+                    <span class="status testing">Test This</span>
+                    <p class="route-description">SAI administrative dashboard</p>
+                </li>
+                <li class="route-item">
+                    <a href="/sai/trainer-verification" class="route-link">Trainer Verification</a>
+                    <span class="status testing">Test This</span>
+                    <p class="route-description">Trainer verification management</p>
+                </li>
+                <li class="route-item">
+                    <a href="/sai/athletes" class="route-link">Athlete Rankings</a>
+                    <span class="status testing">Test This</span>
+                    <p class="route-description">View athlete rankings and data</p>
+                </li>
+                <li class="route-item">
+                    <a href="/sai/analytics" class="route-link">Performance Analytics</a>
+                    <span class="status testing">Test This</span>
+                    <p class="route-description">Platform analytics and reports</p>
+                </li>
+                <li class="route-item">
+                    <a href="/sai/integrity" class="route-link">Assessment Integrity</a>
+                    <span class="status testing">Test This</span>
+                    <p class="route-description">Assessment integrity monitoring</p>
+                </li>
+                <li class="route-item">
+                    <a href="/sai/security" class="route-link">Security & Compliance</a>
+                    <span class="status testing">Test This</span>
+                    <p class="route-description">Security and compliance management</p>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Other Routes -->
+        <div class="section">
+            <h2>🔗 Other Routes</h2>
+            <ul class="route-list">
+                <li class="route-item">
+                    <a href="/coaches" class="route-link">Find Coaches</a>
+                    <span class="status working">Should Work</span>
+                    <p class="route-description">Browse available coaches</p>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="instructions">
+            <h3>🔍 What to Look For:</h3>
+            <p>
+                <strong>✅ Working Route:</strong> You see a proper page with content, styling, and navigation<br>
+                <strong>❌ Broken Route:</strong> You see "Cannot GET /route" or a 404 error page<br>
+                <strong>⚠️ Partially Working:</strong> Page loads but looks broken or has errors in console (F12)
+            </p>
+        </div>
+    </div>
+    
+    <script>
+        // Add click tracking
+        document.querySelectorAll('.route-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const route = this.getAttribute('href');
+                console.log('Testing route:', route);
+                
+                // Store the test in sessionStorage so we can track it
+                sessionStorage.setItem('lastTestedRoute', route);
+                sessionStorage.setItem('lastTestedTime', new Date().toISOString());
+            });
+        });
+        
+        // Show last tested route on page load
+        window.addEventListener('load', function() {
+            const lastRoute = sessionStorage.getItem('lastTestedRoute');
+            const lastTime = sessionStorage.getItem('lastTestedTime');
+            
+            if (lastRoute && lastTime) {
+                console.log('Last tested route:', lastRoute, 'at', lastTime);
+            }
+        });
+    </script>
+</body>
+</html>

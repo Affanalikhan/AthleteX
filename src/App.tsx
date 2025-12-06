@@ -1,14 +1,13 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { CssBaseline, Box, Button } from '@mui/material';
+import { CssBaseline, Box } from '@mui/material';
 import { useAuth } from './hooks/useAuth';
 import { CapacitorProvider } from './providers/CapacitorProvider';
 
 // Pages
 import LandingPage from './pages/LandingPage';
-import SimpleLoginPage from './pages/SimpleLoginPage';
-import AdminLoginPage from './pages/AdminLoginPage';
+import EnhancedLoginPage from './pages/EnhancedLoginPage';
 import SignupPage from './pages/SignupPage';
 import ProfilePage from './pages/ProfilePage';
 import AssessmentPage from './pages/AssessmentPage';
@@ -16,18 +15,36 @@ import EnhancedAssessmentPage from './pages/EnhancedAssessmentPage';
 import AssessmentResultsPage from './pages/AssessmentResultsPage';
 import PerformancePage from './pages/PerformancePage';
 import TrainingPage from './pages/TrainingPage';
-import SocialPage from './pages/SocialPage';
-import AdminPage from './pages/AdminPage';
-import AssessmentIntegrityDashboard from './components/AssessmentIntegrityDashboard';
+import EnhancedSocialPage from './pages/EnhancedSocialPage';
 import SAILoginPage from './pages/SAILoginPage';
 import SAIDashboard from './pages/SAIDashboard';
+
+// Mobile Pages
+import MobileLandingPage from './pages/MobileLandingPage';
+import MobileLoginPage from './pages/MobileLoginPage';
+import MobileProfilePage from './pages/MobileProfilePage';
+import MobileAssessmentPage from './pages/MobileAssessmentPage';
+import MobilePerformancePage from './pages/MobilePerformancePage';
+
+// New Coach/Trainer Pages
+import CoachesPage from './pages/CoachesPage';
+import TrainerLoginPage from './pages/TrainerLoginPage';
+import TrainerRegistrationPage from './pages/TrainerRegistrationPage';
+import TrainerDashboard from './pages/TrainerDashboard';
+import TrainerProfilePage from './pages/TrainerProfilePage';
+import SAICloudPortalPage from './pages/SAICloudPortalPage';
+import TrainerVerificationPage from './pages/TrainerVerificationPage';
+import AthleteRankingsPage from './pages/AthleteRankingsPage';
+import PerformanceAnalyticsPage from './pages/PerformanceAnalyticsPage';
+import AssessmentIntegrityPage from './pages/AssessmentIntegrityPage';
+import SecurityCompliancePage from './pages/SecurityCompliancePage';
 
 // Components
 import Navigation from './components/Navigation';
 import LoadingSpinner from './components/LoadingSpinner';
-import { AdminAuthProvider } from './components/AdminAuthProvider';
-import AdminLayout from './components/AdminLayout';
-import ProtectedAdminRoute from './components/ProtectedAdminRoute';
+import ResponsiveWrapper from './components/ResponsiveWrapper';
+import PWAInstallPrompt from './components/PWAInstallPrompt';
+
 import SportyBackground from './components/SportyBackground';
 
 const theme = createTheme({
@@ -194,23 +211,9 @@ const PublicRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return <>{children}</>;
 };
 
-// Add Admin Login Link to Main Login Page
-const LoginPageWithAdminLink: React.FC = () => {
-  return (
-    <Box>
-      <SimpleLoginPage />
-      <Box sx={{ position: 'fixed', top: 20, right: 20 }}>
-        <Button
-          variant="outlined"
-          color="primary"
-          href="/admin/login"
-          sx={{ fontWeight: 'bold' }}
-        >
-          Admin Login
-        </Button>
-      </Box>
-    </Box>
-  );
+// Clean athlete login page without additional buttons
+const LoginPageWithLinks: React.FC = () => {
+  return <EnhancedLoginPage />;
 };
 
 const App: React.FC = () => {
@@ -219,15 +222,20 @@ const App: React.FC = () => {
       <CssBaseline />
       <CapacitorProvider>
         <Router>
-          <AdminAuthProvider>
             <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+            {/* PWA Install Prompt */}
+            <PWAInstallPrompt />
+            
             <Routes>
               {/* Public Routes */}
               <Route
                 path="/login"
                 element={
                   <PublicRoute>
-                    <LoginPageWithAdminLink />
+                    <ResponsiveWrapper
+                      mobileComponent={<MobileLoginPage />}
+                      desktopComponent={<LoginPageWithLinks />}
+                    />
                   </PublicRoute>
                 }
               />
@@ -240,36 +248,40 @@ const App: React.FC = () => {
                 }
               />
 
-              {/* Admin Login Route */}
-              <Route path="/admin/login" element={<AdminLoginPage />} />
-              
-              {/* SAI Login Route */}
-              <Route path="/admin/sai-login" element={<SAILoginPage />} />
+              {/* SAI Routes */}
+              <Route path="/sai-portal" element={<SAICloudPortalPage />} />
+              <Route path="/sai-login" element={<SAILoginPage />} />
+              <Route path="/sai/trainer-verification" element={<TrainerVerificationPage />} />
+              <Route path="/sai/dashboard" element={<SAIDashboard />} />
+              <Route path="/sai/athletes" element={<AthleteRankingsPage />} />
+              <Route path="/sai/analytics" element={<PerformanceAnalyticsPage />} />
+              <Route path="/sai/integrity" element={<AssessmentIntegrityPage />} />
+              <Route path="/sai/security" element={<SecurityCompliancePage />} />
 
-              {/* Protected Admin Routes */}
-              <Route
-                path="/admin"
-                element={
-                  <ProtectedAdminRoute>
-                    <AdminLayout />
-                  </ProtectedAdminRoute>
-                }
-              >
-                <Route index element={<Navigate to="dashboard" replace />} />
-                <Route path="dashboard" element={<AdminPage />} />
-                <Route path="integrity" element={<AssessmentIntegrityDashboard />} />
-                <Route path="sai-dashboard" element={<SAIDashboard />} />
-              </Route>
+              {/* Trainer Routes */}
+              <Route path="/trainer/login" element={<TrainerLoginPage />} />
+              <Route path="/trainer/register" element={<TrainerRegistrationPage />} />
+              <Route path="/trainer/dashboard" element={<TrainerDashboard />} />
+              <Route path="/trainer/profile" element={<TrainerProfilePage />} />
+
+              {/* Legacy Admin Routes - Redirect to SAI Portal */}
+              <Route path="/admin/login" element={<Navigate to="/sai-login" replace />} />
+              <Route path="/admin/*" element={<Navigate to="/sai-portal" replace />} />
 
               {/* Protected User Routes */}
               <Route
                 path="/profile"
                 element={
                   <ProtectedRoute>
-                    <SportyBackground variant="minimal">
-                      <Navigation />
-                      <ProfilePage />
-                    </SportyBackground>
+                    <ResponsiveWrapper
+                      mobileComponent={<MobileProfilePage />}
+                      desktopComponent={
+                        <SportyBackground variant="minimal">
+                          <Navigation />
+                          <ProfilePage />
+                        </SportyBackground>
+                      }
+                    />
                   </ProtectedRoute>
                 }
               />
@@ -277,10 +289,15 @@ const App: React.FC = () => {
                 path="/assessment"
                 element={
                   <ProtectedRoute>
-                    <SportyBackground variant="pattern">
-                      <Navigation />
-                      <AssessmentPage />
-                    </SportyBackground>
+                    <ResponsiveWrapper
+                      mobileComponent={<MobileAssessmentPage />}
+                      desktopComponent={
+                        <SportyBackground variant="pattern">
+                          <Navigation />
+                          <AssessmentPage />
+                        </SportyBackground>
+                      }
+                    />
                   </ProtectedRoute>
                 }
               />
@@ -310,10 +327,15 @@ const App: React.FC = () => {
                 path="/performance"
                 element={
                   <ProtectedRoute>
-                    <SportyBackground variant="minimal">
-                      <Navigation />
-                      <PerformancePage />
-                    </SportyBackground>
+                    <ResponsiveWrapper
+                      mobileComponent={<MobilePerformancePage />}
+                      desktopComponent={
+                        <SportyBackground variant="minimal">
+                          <Navigation />
+                          <PerformancePage />
+                        </SportyBackground>
+                      }
+                    />
                   </ProtectedRoute>
                 }
               />
@@ -332,11 +354,20 @@ const App: React.FC = () => {
                 path="/social"
                 element={
                   <ProtectedRoute>
-                    <SportyBackground>
+                    <SportyBackground variant="minimal">
                       <Navigation />
-                      <SocialPage />
+                      <EnhancedSocialPage />
                     </SportyBackground>
                   </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/coaches"
+                element={
+                  <SportyBackground variant="minimal">
+                    <Navigation />
+                    <CoachesPage />
+                  </SportyBackground>
                 }
               />
 
@@ -344,10 +375,17 @@ const App: React.FC = () => {
               <Route path="/dashboard" element={<Navigate to="/profile" replace />} />
               
               {/* Default Route - Landing Page */}
-              <Route path="/" element={<LandingPage />} />
+              <Route
+                path="/"
+                element={
+                  <ResponsiveWrapper
+                    mobileComponent={<MobileLandingPage />}
+                    desktopComponent={<LandingPage />}
+                  />
+                }
+              />
             </Routes>
             </Box>
-          </AdminAuthProvider>
         </Router>
       </CapacitorProvider>
     </ThemeProvider>

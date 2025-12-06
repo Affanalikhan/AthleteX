@@ -202,5 +202,719 @@
         "imageUrl": "/images/kabaddi-chain.jpg"
       }
     ]
+  },
+  {
+    "id": "cricket_beginner",
+    "sport": "cricket",
+    "title": "Cricket Fundamentals",
+    "description": "Master the basics of cricket including batting, bowling, and fielding techniques.",
+    "difficulty": "beginner",
+    "duration": "8 weeks",
+    "exercises": [
+      {
+        "id": "19",
+        "name": "Batting Stance & Grip",
+        "description": "Learn proper batting stance, grip, and basic shots",
+        "duration": "25 minutes",
+        "reps": "50 balls",
+        "imageUrl": "/images/cricket-batting.jpg"
+      },
+      {
+        "id": "20",
+        "name": "Bowling Action",
+        "description": "Develop smooth bowling action and line & length control",
+        "duration": "20 minutes",
+        "reps": "6 overs",
+        "imageUrl": "/images/cricket-bowling.jpg"
+      },
+      {
+        "id": "21",
+        "name": "Fielding Drills",
+        "description": "Catching, throwing, and ground fielding practice",
+        "duration": "30 minutes",
+        "reps": "40 catches",
+        "imageUrl": "/images/cricket-fielding.jpg"
+      }
+    ]
+  },
+  {
+    "id": "swimming_intermediate",
+    "sport": "swimming",
+    "title": "Swimming Technique Mastery",
+    "description": "Improve swimming efficiency across all four strokes with endurance training.",
+    "difficulty": "intermediate",
+    "duration": "10 weeks",
+    "exercises": [
+      {
+        "id": "22",
+        "name": "Freestyle Technique",
+        "description": "Refine freestyle stroke mechanics and breathing",
+        "duration": "30 minutes",
+        "reps": "10x100m",
+        "imageUrl": "/images/freestyle.jpg"
+      },
+      {
+        "id": "23",
+        "name": "Butterfly Drills",
+        "description": "Master butterfly stroke timing and power",
+        "duration": "25 minutes",
+        "reps": "8x50m",
+        "imageUrl": "/images/butterfly.jpg"
+      },
+      {
+        "id": "24",
+        "name": "Endurance Sets",
+        "description": "Build cardiovascular endurance with long distance swimming",
+        "duration": "40 minutes",
+        "reps": "2000m continuous",
+        "imageUrl": "/images/endurance-swim.jpg"
+      }
+    ]
+  },
+  {
+    "id": "volleyball_beginner",
+    "sport": "volleyball",
+    "title": "Volleyball Basics",
+    "description": "Learn essential volleyball skills including serving, passing, and spiking.",
+    "difficulty": "beginner",
+    "duration": "6 weeks",
+    "exercises": [
+      {
+        "id": "25",
+        "name": "Serving Practice",
+        "description": "Master underhand and overhand serving techniques",
+        "duration": "20 minutes",
+        "reps": "50 serves",
+        "imageUrl": "/images/volleyball-serve.jpg"
+      },
+      {
+        "id": "26",
+        "name": "Passing & Setting",
+        "description": "Develop accurate passing and setting skills",
+        "duration": "25 minutes",
+        "reps": "100 passes",
+        "imageUrl": "/images/volleyball-pass.jpg"
+      },
+      {
+        "id": "27",
+        "name": "Spiking Technique",
+        "description": "Learn approach, jump, and spiking mechanics",
+        "duration": "30 minutes",
+        "reps": "40 spikes",
+        "imageUrl": "/images/volleyball-spike.jpg"
+      }
+    ]
+  },
+  {
+    "id": "badminton_intermediate",
+    "sport": "badminton",
+    "title": "Badminton Skills Enhancement",
+    "description": "Improve footwork, shot variety, and tactical play in badminton.",
+    "difficulty": "intermediate",
+    "duration": "7 weeks",
+    "exercises": [
+      {
+        "id": "28",
+        "name": "Footwork Drills",
+        "description": "Master court coverage and movement patterns",
+        "duration": "20 minutes",
+        "reps": "6 sets",
+        "imageUrl": "/images/badminton-footwork.jpg"
+      },
+      {
+        "id": "29",
+        "name": "Smash & Drop Shots",
+        "description": "Practice powerful smashes and deceptive drop shots",
+        "duration": "25 minutes",
+        "reps": "50 each",
+        "imageUrl": "/images/badminton-smash.jpg"
+      },
+      {
+        "id": "30",
+        "name": "Net Play",
+        "description": "Develop quick reflexes and net shot accuracy",
+        "duration": "18 minutes",
+        "reps": "80 shots",
+        "imageUrl": "/images/badminton-net.jpg"
+      }
+    ]
+  },
+  {
+    "id": "tennis_advanced",
+    "sport": "tennis",
+    "title": "Tennis Performance Training",
+    "description": "Advanced tennis training focusing on power, spin, and match strategy.",
+    "difficulty": "advanced",
+    "duration": "12 weeks",
+    "exercises": [
+      {
+        "id": "31",
+        "name": "Serve Power & Placement",
+        "description": "Develop explosive serves with strategic placement",
+        "duration": "30 minutes",
+        "reps": "100 serves",
+        "imageUrl": "/images/tennis-serve.jpg"
+      },
+      {
+        "id": "32",
+        "name": "Groundstroke Consistency",
+        "description": "Build rally endurance with topspin forehands and backhands",
+        "duration": "35 minutes",
+        "reps": "200 shots",
+        "imageUrl": "/images/tennis-groundstroke.jpg"
+      },
+      {
+        "id": "33",
+        "name": "Match Play Tactics",
+        "description": "Strategic point construction and mental game",
+        "duration": "45 minutes",
+        "reps": "3 sets",
+        "imageUrl": "/images/tennis-match.jpg"
+      }
+    ]
+  },
+  {
+    "id": "boxing_beginner",
+    "sport": "boxing",
+    "title": "Boxing Fundamentals",
+    "description": "Learn basic boxing techniques, footwork, and conditioning.",
+    "difficulty": "beginner",
+    "duration": "8 weeks",
+    "exercises": [
+      {
+        "id": "34",
+        "name": "Basic Punches",
+        "description": "Master jab, cross, hook, and uppercut techniques",
+        "duration": "25 minutes",
+        "reps": "10 rounds",
+        "imageUrl": "/images/boxing-punches.jpg"
+      },
+      {
+        "id": "35",
+        "name": "Footwork & Movement",
+        "description": "Develop ring movement and defensive positioning",
+        "duration": "20 minutes",
+        "reps": "8 rounds",
+        "imageUrl": "/images/boxing-footwork.jpg"
+      },
+      {
+        "id": "36",
+        "name": "Heavy Bag Training",
+        "description": "Build power and endurance with bag work",
+        "duration": "30 minutes",
+        "reps": "6 rounds",
+        "imageUrl": "/images/boxing-bag.jpg"
+      }
+    ]
+  },
+  {
+    "id": "wrestling_intermediate",
+    "sport": "wrestling",
+    "title": "Wrestling Technique Development",
+    "description": "Improve takedowns, escapes, and mat control in wrestling.",
+    "difficulty": "intermediate",
+    "duration": "10 weeks",
+    "exercises": [
+      {
+        "id": "37",
+        "name": "Takedown Drills",
+        "description": "Practice single-leg, double-leg, and high-crotch takedowns",
+        "duration": "30 minutes",
+        "reps": "50 attempts",
+        "imageUrl": "/images/wrestling-takedown.jpg"
+      },
+      {
+        "id": "38",
+        "name": "Escape Techniques",
+        "description": "Master bottom position escapes and reversals",
+        "duration": "25 minutes",
+        "reps": "40 reps",
+        "imageUrl": "/images/wrestling-escape.jpg"
+      },
+      {
+        "id": "39",
+        "name": "Mat Wrestling",
+        "description": "Develop pinning combinations and mat control",
+        "duration": "35 minutes",
+        "reps": "15 minutes live",
+        "imageUrl": "/images/wrestling-mat.jpg"
+      }
+    ]
+  },
+  {
+    "id": "weightlifting_advanced",
+    "sport": "weightlifting",
+    "title": "Olympic Weightlifting Program",
+    "description": "Advanced training for snatch, clean & jerk, and strength development.",
+    "difficulty": "advanced",
+    "duration": "12 weeks",
+    "exercises": [
+      {
+        "id": "40",
+        "name": "Snatch Technique",
+        "description": "Perfect snatch form from floor to overhead",
+        "duration": "40 minutes",
+        "reps": "5x3 at 80%",
+        "imageUrl": "/images/snatch.jpg"
+      },
+      {
+        "id": "41",
+        "name": "Clean & Jerk",
+        "description": "Develop explosive power in the clean and jerk",
+        "duration": "45 minutes",
+        "reps": "5x2 at 85%",
+        "imageUrl": "/images/clean-jerk.jpg"
+      },
+      {
+        "id": "42",
+        "name": "Strength Accessories",
+        "description": "Squats, pulls, and pressing for strength foundation",
+        "duration": "50 minutes",
+        "reps": "4x6 each",
+        "imageUrl": "/images/strength-training.jpg"
+      }
+    ]
+  },
+  {
+    "id": "gymnastics_beginner",
+    "sport": "gymnastics",
+    "title": "Gymnastics Foundation",
+    "description": "Build strength, flexibility, and basic gymnastics skills.",
+    "difficulty": "beginner",
+    "duration": "10 weeks",
+    "exercises": [
+      {
+        "id": "43",
+        "name": "Flexibility Training",
+        "description": "Develop splits, bridges, and overall flexibility",
+        "duration": "30 minutes",
+        "reps": "Hold 30s each",
+        "imageUrl": "/images/gymnastics-flexibility.jpg"
+      },
+      {
+        "id": "44",
+        "name": "Handstand Practice",
+        "description": "Build shoulder strength and balance for handstands",
+        "duration": "25 minutes",
+        "reps": "10 attempts",
+        "imageUrl": "/images/handstand.jpg"
+      },
+      {
+        "id": "45",
+        "name": "Basic Tumbling",
+        "description": "Learn rolls, cartwheels, and round-offs",
+        "duration": "35 minutes",
+        "reps": "20 each skill",
+        "imageUrl": "/images/tumbling.jpg"
+      }
+    ]
+  },
+  {
+    "id": "cycling_intermediate",
+    "sport": "cycling",
+    "title": "Cycling Performance Training",
+    "description": "Improve cycling endurance, power, and climbing ability.",
+    "difficulty": "intermediate",
+    "duration": "12 weeks",
+    "exercises": [
+      {
+        "id": "46",
+        "name": "Interval Training",
+        "description": "High-intensity intervals for power development",
+        "duration": "60 minutes",
+        "reps": "8x5min at threshold",
+        "imageUrl": "/images/cycling-intervals.jpg"
+      },
+      {
+        "id": "47",
+        "name": "Hill Repeats",
+        "description": "Build climbing strength and endurance",
+        "duration": "90 minutes",
+        "reps": "6 climbs",
+        "imageUrl": "/images/cycling-hills.jpg"
+      },
+      {
+        "id": "48",
+        "name": "Long Endurance Ride",
+        "description": "Build aerobic base with steady-state riding",
+        "duration": "180 minutes",
+        "reps": "1 ride",
+        "imageUrl": "/images/cycling-endurance.jpg"
+      }
+    ]
+  },
+  {
+    "id": "rowing_advanced",
+    "sport": "rowing",
+    "title": "Rowing Excellence Program",
+    "description": "Advanced rowing training for technique, power, and race preparation.",
+    "difficulty": "advanced",
+    "duration": "14 weeks",
+    "exercises": [
+      {
+        "id": "49",
+        "name": "Technique Drills",
+        "description": "Perfect rowing stroke mechanics and timing",
+        "duration": "45 minutes",
+        "reps": "10km steady state",
+        "imageUrl": "/images/rowing-technique.jpg"
+      },
+      {
+        "id": "50",
+        "name": "Power Intervals",
+        "description": "Build explosive power with high-intensity pieces",
+        "duration": "40 minutes",
+        "reps": "8x500m",
+        "imageUrl": "/images/rowing-power.jpg"
+      },
+      {
+        "id": "51",
+        "name": "Race Pace Training",
+        "description": "Practice race distance at competition pace",
+        "duration": "30 minutes",
+        "reps": "2000m x 3",
+        "imageUrl": "/images/rowing-race.jpg"
+      }
+    ]
+  },
+  {
+    "id": "football_intermediate",
+    "sport": "football",
+    "title": "Football Tactical Training",
+    "description": "Intermediate football program focusing on tactical awareness, advanced techniques, and match situations.",
+    "difficulty": "intermediate",
+    "duration": "8 weeks",
+    "exercises": [
+      {
+        "id": "52",
+        "name": "Tactical Positioning",
+        "description": "Learn positional play and tactical awareness in different formations",
+        "duration": "25 minutes",
+        "reps": "4 sets",
+        "imageUrl": "/images/tactics.jpg"
+      },
+      {
+        "id": "53",
+        "name": "Advanced Dribbling",
+        "description": "Complex dribbling moves and feints to beat defenders",
+        "duration": "20 minutes",
+        "reps": "6 sets",
+        "imageUrl": "/images/advanced-dribbling.jpg"
+      },
+      {
+        "id": "54",
+        "name": "Shooting Accuracy",
+        "description": "Precision shooting from various angles and distances",
+        "duration": "30 minutes",
+        "reps": "50 shots",
+        "imageUrl": "/images/shooting.jpg"
+      }
+    ]
+  },
+  {
+    "id": "football_advanced",
+    "sport": "football",
+    "title": "Football Elite Performance",
+    "description": "Advanced football training for competitive players focusing on match intensity and professional techniques.",
+    "difficulty": "advanced",
+    "duration": "12 weeks",
+    "exercises": [
+      {
+        "id": "55",
+        "name": "High-Intensity Match Simulation",
+        "description": "Full-intensity match scenarios with tactical decisions",
+        "duration": "45 minutes",
+        "reps": "2 halves",
+        "imageUrl": "/images/match-sim.jpg"
+      },
+      {
+        "id": "56",
+        "name": "Set Piece Mastery",
+        "description": "Advanced free kicks, corners, and penalty techniques",
+        "duration": "35 minutes",
+        "reps": "30 attempts",
+        "imageUrl": "/images/set-pieces.jpg"
+      },
+      {
+        "id": "57",
+        "name": "Speed & Agility Drills",
+        "description": "Elite-level speed work and directional changes",
+        "duration": "40 minutes",
+        "reps": "10 sets",
+        "imageUrl": "/images/speed-agility.jpg"
+      }
+    ]
+  },
+  {
+    "id": "basketball_beginner",
+    "sport": "basketball",
+    "title": "Basketball Basics",
+    "description": "Fundamental basketball skills for beginners including dribbling, shooting, and basic rules.",
+    "difficulty": "beginner",
+    "duration": "6 weeks",
+    "exercises": [
+      {
+        "id": "58",
+        "name": "Basic Dribbling",
+        "description": "Learn proper dribbling technique with both hands",
+        "duration": "15 minutes",
+        "reps": "5 sets",
+        "imageUrl": "/images/basic-dribbling.jpg"
+      },
+      {
+        "id": "59",
+        "name": "Layup Practice",
+        "description": "Master the fundamental layup from both sides",
+        "duration": "20 minutes",
+        "reps": "30 attempts",
+        "imageUrl": "/images/layups.jpg"
+      },
+      {
+        "id": "60",
+        "name": "Chest Pass Drills",
+        "description": "Practice accurate chest passes with a partner",
+        "duration": "15 minutes",
+        "reps": "50 passes",
+        "imageUrl": "/images/chest-pass.jpg"
+      }
+    ]
+  },
+  {
+    "id": "basketball_advanced",
+    "sport": "basketball",
+    "title": "Basketball Elite Training",
+    "description": "Advanced basketball program for competitive players focusing on game situations and advanced skills.",
+    "difficulty": "advanced",
+    "duration": "12 weeks",
+    "exercises": [
+      {
+        "id": "61",
+        "name": "Advanced Ball Handling",
+        "description": "Complex dribbling combinations and crossovers",
+        "duration": "30 minutes",
+        "reps": "8 sets",
+        "imageUrl": "/images/advanced-handling.jpg"
+      },
+      {
+        "id": "62",
+        "name": "Game Speed Shooting",
+        "description": "Shooting drills at game pace with defensive pressure",
+        "duration": "35 minutes",
+        "reps": "150 shots",
+        "imageUrl": "/images/game-shooting.jpg"
+      },
+      {
+        "id": "63",
+        "name": "Full Court Conditioning",
+        "description": "High-intensity full court drills for game endurance",
+        "duration": "40 minutes",
+        "reps": "12 sprints",
+        "imageUrl": "/images/conditioning.jpg"
+      }
+    ]
+  },
+  {
+    "id": "cricket_intermediate",
+    "sport": "cricket",
+    "title": "Cricket Skills Enhancement",
+    "description": "Intermediate cricket training focusing on advanced batting, bowling variations, and fielding positions.",
+    "difficulty": "intermediate",
+    "duration": "10 weeks",
+    "exercises": [
+      {
+        "id": "64",
+        "name": "Advanced Batting Shots",
+        "description": "Master pull, cut, and sweep shots",
+        "duration": "30 minutes",
+        "reps": "100 balls",
+        "imageUrl": "/images/advanced-batting.jpg"
+      },
+      {
+        "id": "65",
+        "name": "Bowling Variations",
+        "description": "Learn swing, seam, and spin bowling techniques",
+        "duration": "35 minutes",
+        "reps": "10 overs",
+        "imageUrl": "/images/bowling-variations.jpg"
+      },
+      {
+        "id": "66",
+        "name": "Specialist Fielding",
+        "description": "Position-specific fielding drills and techniques",
+        "duration": "25 minutes",
+        "reps": "50 catches",
+        "imageUrl": "/images/specialist-fielding.jpg"
+      }
+    ]
+  },
+  {
+    "id": "cricket_advanced",
+    "sport": "cricket",
+    "title": "Cricket Match Preparation",
+    "description": "Advanced cricket training for competitive matches with match scenarios and pressure situations.",
+    "difficulty": "advanced",
+    "duration": "14 weeks",
+    "exercises": [
+      {
+        "id": "67",
+        "name": "Match Situation Batting",
+        "description": "Practice batting under match pressure and scenarios",
+        "duration": "45 minutes",
+        "reps": "150 balls",
+        "imageUrl": "/images/match-batting.jpg"
+      },
+      {
+        "id": "68",
+        "name": "Death Bowling",
+        "description": "Master bowling in pressure situations and death overs",
+        "duration": "40 minutes",
+        "reps": "12 overs",
+        "imageUrl": "/images/death-bowling.jpg"
+      },
+      {
+        "id": "69",
+        "name": "Match Fielding Drills",
+        "description": "High-pressure fielding scenarios and run-out practice",
+        "duration": "35 minutes",
+        "reps": "100 attempts",
+        "imageUrl": "/images/match-fielding.jpg"
+      }
+    ]
+  },
+  {
+    "id": "swimming_beginner",
+    "sport": "swimming",
+    "title": "Swimming Fundamentals",
+    "description": "Learn basic swimming strokes, breathing techniques, and water confidence.",
+    "difficulty": "beginner",
+    "duration": "8 weeks",
+    "exercises": [
+      {
+        "id": "70",
+        "name": "Freestyle Basics",
+        "description": "Learn proper freestyle stroke and breathing",
+        "duration": "20 minutes",
+        "reps": "10x25m",
+        "imageUrl": "/images/freestyle-basics.jpg"
+      },
+      {
+        "id": "71",
+        "name": "Backstroke Introduction",
+        "description": "Master backstroke technique and body position",
+        "duration": "20 minutes",
+        "reps": "8x25m",
+        "imageUrl": "/images/backstroke.jpg"
+      },
+      {
+        "id": "72",
+        "name": "Water Confidence",
+        "description": "Floating, treading water, and basic safety skills",
+        "duration": "15 minutes",
+        "reps": "5 sets",
+        "imageUrl": "/images/water-confidence.jpg"
+      }
+    ]
+  },
+  {
+    "id": "swimming_advanced",
+    "sport": "swimming",
+    "title": "Swimming Competition Prep",
+    "description": "Advanced swimming training for competitive racing with race strategies and advanced techniques.",
+    "difficulty": "advanced",
+    "duration": "14 weeks",
+    "exercises": [
+      {
+        "id": "73",
+        "name": "Race Pace Training",
+        "description": "Practice swimming at competition pace",
+        "duration": "45 minutes",
+        "reps": "8x200m",
+        "imageUrl": "/images/race-pace.jpg"
+      },
+      {
+        "id": "74",
+        "name": "Turns & Starts",
+        "description": "Perfect dive starts and flip turns",
+        "duration": "30 minutes",
+        "reps": "50 attempts",
+        "imageUrl": "/images/turns-starts.jpg"
+      },
+      {
+        "id": "75",
+        "name": "IM Training",
+        "description": "Individual medley training for all four strokes",
+        "duration": "50 minutes",
+        "reps": "4x400m IM",
+        "imageUrl": "/images/im-training.jpg"
+      }
+    ]
+  },
+  {
+    "id": "volleyball_intermediate",
+    "sport": "volleyball",
+    "title": "Volleyball Skills Development",
+    "description": "Intermediate volleyball training focusing on advanced techniques and team play.",
+    "difficulty": "intermediate",
+    "duration": "8 weeks",
+    "exercises": [
+      {
+        "id": "76",
+        "name": "Advanced Serving",
+        "description": "Master jump serves and float serves",
+        "duration": "25 minutes",
+        "reps": "80 serves",
+        "imageUrl": "/images/advanced-serving.jpg"
+      },
+      {
+        "id": "77",
+        "name": "Blocking Techniques",
+        "description": "Learn proper blocking form and timing",
+        "duration": "30 minutes",
+        "reps": "60 blocks",
+        "imageUrl": "/images/blocking.jpg"
+      },
+      {
+        "id": "78",
+        "name": "Team Rotations",
+        "description": "Practice rotational play and positioning",
+        "duration": "35 minutes",
+        "reps": "10 rotations",
+        "imageUrl": "/images/rotations.jpg"
+      }
+    ]
+  },
+  {
+    "id": "volleyball_advanced",
+    "sport": "volleyball",
+    "title": "Volleyball Competition Training",
+    "description": "Advanced volleyball program for competitive play with match strategies and elite skills.",
+    "difficulty": "advanced",
+    "duration": "12 weeks",
+    "exercises": [
+      {
+        "id": "79",
+        "name": "Power Hitting",
+        "description": "Develop explosive spiking power and accuracy",
+        "duration": "35 minutes",
+        "reps": "100 spikes",
+        "imageUrl": "/images/power-hitting.jpg"
+      },
+      {
+        "id": "80",
+        "name": "Defensive Systems",
+        "description": "Advanced defensive formations and strategies",
+        "duration": "40 minutes",
+        "reps": "15 scenarios",
+        "imageUrl": "/images/defensive-systems.jpg"
+      },
+      {
+        "id": "81",
+        "name": "Match Simulation",
+        "description": "Full match scenarios with game pressure",
+        "duration": "60 minutes",
+        "reps": "3 sets",
+        "imageUrl": "/images/match-sim-vb.jpg"
+      }
+    ]
   }
 ]

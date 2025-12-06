@@ -2,6 +2,32 @@ import { useState, useEffect } from 'react';
 import { User } from '../models';
 import authService from '../services/authService';
 
+// Extend the User type to include additional properties
+declare module '../models' {
+  interface User {
+    id: string;
+    uid: string;
+    email: string;
+    displayName?: string;
+    phoneNumber?: string;
+    photoURL?: string;
+    role: 'athlete' | 'admin';
+    token?: string;
+    preferences?: {
+      workoutDuration?: number;
+      equipment?: string[];
+      goals?: string[];
+    };
+    profile?: {
+      age?: number;
+      weight?: number;
+      height?: number;
+      gender?: string;
+      injuries?: string[];
+    };
+  }
+}
+
 interface AuthState {
   user: User | null;
   loading: boolean;
@@ -67,11 +93,18 @@ export const useAuth = () => {
     try {
       await authService.signOut();
       setAuthState({ user: null, loading: false, error: null });
+      // Clear any stored tokens or user data
+      localStorage.removeItem('authToken');
+      sessionStorage.removeItem('user');
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Sign out failed';
       setAuthState(prev => ({ ...prev, error: errorMessage }));
+      throw error;
     }
   };
+
+  // Alias for signOut to maintain consistency with other code
+  const logout = signOut;
 
   const setupRecaptcha = (containerId?: string) => {
     authService.setupRecaptcha();
@@ -118,6 +151,7 @@ export const useAuth = () => {
     signUp,
     signIn,
     signOut,
+    logout, // Alias for signOut
     setupRecaptcha,
     sendOTP,
     verifyOTP,

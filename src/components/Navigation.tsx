@@ -18,8 +18,8 @@ import {
   TrendingUp,
   FitnessCenter,
   Groups,
-  AdminPanelSettings,
-  Logout
+  Logout,
+  School
 } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
@@ -45,6 +45,15 @@ const Navigation: React.FC = () => {
     handleClose();
   };
 
+  const handleLogoClick = () => {
+    // If user is authenticated, go to profile page, otherwise go to landing page
+    if (user) {
+      navigate('/profile');
+    } else {
+      navigate('/');
+    }
+  };
+
   const handleSignOut = async () => {
     try {
       await signOut();
@@ -61,12 +70,9 @@ const Navigation: React.FC = () => {
       { label: 'Assessment', path: '/assessment', icon: <Assessment /> },
       { label: 'Performance', path: '/performance', icon: <TrendingUp /> },
       { label: 'Training', path: '/training', icon: <FitnessCenter /> },
+      { label: 'Coaches', path: '/coaches', icon: <School /> },
       { label: 'Social', path: '/social', icon: <Groups /> }
     ];
-
-    if (user?.role === 'admin') {
-      items.push({ label: 'Admin', path: '/admin', icon: <AdminPanelSettings /> });
-    }
 
     return items;
   };
@@ -84,7 +90,19 @@ const Navigation: React.FC = () => {
       }}
     >
       <Toolbar sx={{ py: 1 }}>
-        <Box display="flex" alignItems="center" gap={2} sx={{ flexGrow: 1 }}>
+        <Box 
+          display="flex" 
+          alignItems="center" 
+          gap={2} 
+          sx={{ 
+            flexGrow: 1,
+            cursor: 'pointer',
+            '&:hover': {
+              opacity: 0.8
+            }
+          }}
+          onClick={handleLogoClick}
+        >
           <FitnessCenter sx={{ fontSize: 28, color: '#00f5ff' }} />
           <Typography 
             variant="h6" 

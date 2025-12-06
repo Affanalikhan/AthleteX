@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AthleteX - Offline</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 500px;
+        }
+
+        .icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px;
+            background: linear-gradient(135deg, #00f5ff 0%, #0080ff 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #00f5ff 0%, #0080ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        p {
+            font-size: 18px;
+            color: #999;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 16px 32px;
+            background: #00f5ff;
+            color: #000;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .button:hover {
+            background: #00d4dd;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 245, 255, 0.3);
+        }
+
+        .features {
+            margin-top: 40px;
+            padding: 24px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .features h2 {
+            font-size: 20px;
+            margin-bottom: 16px;
+            color: #00f5ff;
+        }
+
+        .features ul {
+            list-style: none;
+            text-align: left;
+        }
+
+        .features li {
+            padding: 8px 0;
+            color: #ccc;
+            font-size: 14px;
+        }
+
+        .features li:before {
+            content: "✓ ";
+            color: #00f5ff;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .status {
+            margin-top: 20px;
+            padding: 12px;
+            background: rgba(255, 152, 0, 0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 152, 0, 0.3);
+            color: #ff9800;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">📡</div>
+        
+        <h1>You're Offline</h1>
+        
+        <p>
+            No internet connection detected. Don't worry, AthleteX works offline too!
+            Your data will sync automatically when you're back online.
+        </p>
+
+        <button class="button" onclick="window.location.reload()">
+            Try Again
+        </button>
+
+        <div class="features">
+            <h2>Available Offline</h2>
+            <ul>
+                <li>View your profile and stats</li>
+                <li>Access saved training programs</li>
+                <li>Review past assessments</li>
+                <li>Track performance metrics</li>
+                <li>Browse cached content</li>
+            </ul>
+        </div>
+
+        <div class="status">
+            <strong>Status:</strong> Offline Mode Active
+        </div>
+    </div>
+
+    <script>
+        // Check connection status
+        function checkConnection() {
+            if (navigator.onLine) {
+                window.location.reload();
+            }
+        }
+
+        // Listen for online event
+        window.addEventListener('online', checkConnection);
+
+        // Check every 5 seconds
+        setInterval(checkConnection, 5000);
+    </script>
+</body>
+</html>

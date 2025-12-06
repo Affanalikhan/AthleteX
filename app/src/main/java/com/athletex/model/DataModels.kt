@@ -37,9 +37,16 @@ data class AssessmentTest(
 enum class TestType {
     SHOT_PUT,
     BROAD_JUMP,
+    LONG_JUMP,
+    SPRINT_100M,
+    HIGH_JUMP,
+    PUSH_UPS,
+    PULL_UPS,
+    SIT_UPS,
+    PLANK,
     SHUTTLE_RUN,
-    SQUATS,
-    HIGH_JUMP
+    VERTICAL_JUMP,
+    AGILITY_T_TEST
 }
 
 @Parcelize

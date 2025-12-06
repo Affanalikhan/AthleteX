@@ -349,13 +349,13 @@ class CheatDetectionService {
     const baseCompliance = Math.random() * 30 + 70; // 70-100
     
     // Adjust based on exercise complexity
-    const complexityAdjustment = {
-      [TestType.SPEED]: 0,
-      [TestType.AGILITY]: -5,
-      [TestType.STRENGTH]: -3,
-      [TestType.ENDURANCE]: -2,
-      [TestType.FLEXIBILITY]: -7,
-      [TestType.BALANCE]: -10
+    const complexityAdjustment: Partial<Record<TestType, number>> = {
+      [TestType.TENNIS_STANDING_START]: 0,
+      [TestType.FOUR_X_10M_SHUTTLE_RUN]: -5,
+      [TestType.MEDICINE_BALL_THROW]: -3,
+      [TestType.ENDURANCE_RUN]: -2,
+      [TestType.SIT_AND_REACH]: -7,
+      [TestType.STANDING_VERTICAL_JUMP]: -10
     };
 
     return Math.max(0, baseCompliance + (complexityAdjustment[testType] || 0));
@@ -370,13 +370,13 @@ class CheatDetectionService {
     const baseQuality = Math.random() * 30 + 70;
     
     // Different tests have different quality expectations
-    const qualityModifier = {
-      [TestType.BALANCE]: 10, // Higher precision expected
-      [TestType.FLEXIBILITY]: 8,
-      [TestType.AGILITY]: 5,
-      [TestType.STRENGTH]: 3,
-      [TestType.ENDURANCE]: 0,
-      [TestType.SPEED]: -2
+    const qualityModifier: Partial<Record<TestType, number>> = {
+      [TestType.STANDING_VERTICAL_JUMP]: 10, // Higher precision expected
+      [TestType.SIT_AND_REACH]: 8,
+      [TestType.FOUR_X_10M_SHUTTLE_RUN]: 5,
+      [TestType.MEDICINE_BALL_THROW]: 3,
+      [TestType.ENDURANCE_RUN]: 0,
+      [TestType.TENNIS_STANDING_START]: -2
     };
 
     return Math.min(100, baseQuality + (qualityModifier[testType] || 0));
@@ -386,23 +386,23 @@ class CheatDetectionService {
     const issues: MovementAnalysisResult['detectedIssues'] = [];
     
     // Generate test-specific issues based on common problems
-    const commonIssues = {
-      [TestType.SPEED]: [
+    const commonIssues: Partial<Record<TestType, string[]>> = {
+      [TestType.TENNIS_STANDING_START]: [
         'incorrect_form', 'inconsistent_physics'
       ],
-      [TestType.STRENGTH]: [
+      [TestType.MEDICINE_BALL_THROW]: [
         'incorrect_form', 'impossible_movement'
       ],
-      [TestType.FLEXIBILITY]: [
+      [TestType.SIT_AND_REACH]: [
         'incorrect_form', 'unnatural_acceleration'
       ],
-      [TestType.AGILITY]: [
+      [TestType.FOUR_X_10M_SHUTTLE_RUN]: [
         'incorrect_form', 'inconsistent_physics'
       ],
-      [TestType.BALANCE]: [
+      [TestType.STANDING_VERTICAL_JUMP]: [
         'impossible_movement', 'unnatural_acceleration'
       ],
-      [TestType.ENDURANCE]: [
+      [TestType.ENDURANCE_RUN]: [
         'inconsistent_physics', 'unnatural_acceleration'
       ]
     };
@@ -427,18 +427,18 @@ class CheatDetectionService {
 
   private validateDurationAuthenticity(testType: TestType): number {
     // Expected duration ranges for different test types
-    const expectedDurations = {
-      [TestType.SPEED]: { min: 5, max: 30 },
-      [TestType.AGILITY]: { min: 15, max: 60 },
-      [TestType.STRENGTH]: { min: 30, max: 120 },
-      [TestType.ENDURANCE]: { min: 120, max: 600 },
-      [TestType.FLEXIBILITY]: { min: 60, max: 180 },
-      [TestType.BALANCE]: { min: 30, max: 90 }
+    const expectedDurations: Partial<Record<TestType, { min: number; max: number }>> = {
+      [TestType.TENNIS_STANDING_START]: { min: 5, max: 30 },
+      [TestType.FOUR_X_10M_SHUTTLE_RUN]: { min: 15, max: 60 },
+      [TestType.MEDICINE_BALL_THROW]: { min: 30, max: 120 },
+      [TestType.ENDURANCE_RUN]: { min: 120, max: 600 },
+      [TestType.SIT_AND_REACH]: { min: 60, max: 180 },
+      [TestType.STANDING_VERTICAL_JUMP]: { min: 30, max: 90 }
     };
 
     // Simulate duration validation (in real implementation, this would check actual video duration)
     const simulatedDuration = Math.random() * 200 + 10; // 10-210 seconds
-    const expected = expectedDurations[testType];
+    const expected = expectedDurations[testType] || { min: 30, max: 120 };
     
     if (simulatedDuration >= expected.min && simulatedDuration <= expected.max) {
       return Math.random() * 10 + 90; // 90-100
@@ -594,38 +594,38 @@ class CheatDetectionService {
   }
 
   private getIssueDescription(issueType: string, testType: TestType): string {
-    const descriptions: { [key: string]: { [key in TestType]: string } } = {
+    const descriptions: { [key: string]: Partial<{ [key in TestType]: string }> } = {
       incorrect_form: {
-        [TestType.SPEED]: 'Running form not optimal for maximum speed',
-        [TestType.STRENGTH]: 'Exercise performed with incorrect technique',
-        [TestType.AGILITY]: 'Movement pattern deviates from expected form',
-        [TestType.ENDURANCE]: 'Pacing and form inconsistent with endurance requirements',
-        [TestType.FLEXIBILITY]: 'Stretching technique not following proper form',
-        [TestType.BALANCE]: 'Balance position not maintained correctly'
+        [TestType.TENNIS_STANDING_START]: 'Running form not optimal for maximum speed',
+        [TestType.MEDICINE_BALL_THROW]: 'Exercise performed with incorrect technique',
+        [TestType.FOUR_X_10M_SHUTTLE_RUN]: 'Movement pattern deviates from expected form',
+        [TestType.ENDURANCE_RUN]: 'Pacing and form inconsistent with endurance requirements',
+        [TestType.SIT_AND_REACH]: 'Stretching technique not following proper form',
+        [TestType.STANDING_VERTICAL_JUMP]: 'Balance position not maintained correctly'
       },
       impossible_movement: {
-        [TestType.SPEED]: 'Detected physically impossible acceleration',
-        [TestType.STRENGTH]: 'Strength demonstration exceeds human capabilities',
-        [TestType.AGILITY]: 'Movement speed or direction changes not humanly possible',
-        [TestType.ENDURANCE]: 'Endurance performance inconsistent with human limits',
-        [TestType.FLEXIBILITY]: 'Flexibility range exceeds anatomical possibilities',
-        [TestType.BALANCE]: 'Balance performance defies physics'
+        [TestType.TENNIS_STANDING_START]: 'Detected physically impossible acceleration',
+        [TestType.MEDICINE_BALL_THROW]: 'Strength demonstration exceeds human capabilities',
+        [TestType.FOUR_X_10M_SHUTTLE_RUN]: 'Movement speed or direction changes not humanly possible',
+        [TestType.ENDURANCE_RUN]: 'Endurance performance inconsistent with human limits',
+        [TestType.SIT_AND_REACH]: 'Flexibility range exceeds anatomical possibilities',
+        [TestType.STANDING_VERTICAL_JUMP]: 'Balance performance defies physics'
       },
       inconsistent_physics: {
-        [TestType.SPEED]: 'Speed changes inconsistent with physics',
-        [TestType.STRENGTH]: 'Force application inconsistent with movement',
-        [TestType.AGILITY]: 'Directional changes violate momentum principles',
-        [TestType.ENDURANCE]: 'Energy expenditure patterns inconsistent',
-        [TestType.FLEXIBILITY]: 'Movement transitions violate biomechanics',
-        [TestType.BALANCE]: 'Center of gravity shifts impossible'
+        [TestType.TENNIS_STANDING_START]: 'Speed changes inconsistent with physics',
+        [TestType.MEDICINE_BALL_THROW]: 'Force application inconsistent with movement',
+        [TestType.FOUR_X_10M_SHUTTLE_RUN]: 'Directional changes violate momentum principles',
+        [TestType.ENDURANCE_RUN]: 'Energy expenditure patterns inconsistent',
+        [TestType.SIT_AND_REACH]: 'Movement transitions violate biomechanics',
+        [TestType.STANDING_VERTICAL_JUMP]: 'Center of gravity shifts impossible'
       },
       unnatural_acceleration: {
-        [TestType.SPEED]: 'Acceleration pattern appears artificially enhanced',
-        [TestType.STRENGTH]: 'Movement speed unnatural for strength exercise',
-        [TestType.AGILITY]: 'Acceleration between movements unnaturally fast',
-        [TestType.ENDURANCE]: 'Pacing changes unnaturally abrupt',
-        [TestType.FLEXIBILITY]: 'Transition speed between positions unnatural',
-        [TestType.BALANCE]: 'Recovery movements unnaturally fast'
+        [TestType.TENNIS_STANDING_START]: 'Acceleration pattern appears artificially enhanced',
+        [TestType.MEDICINE_BALL_THROW]: 'Movement speed unnatural for strength exercise',
+        [TestType.FOUR_X_10M_SHUTTLE_RUN]: 'Acceleration between movements unnaturally fast',
+        [TestType.ENDURANCE_RUN]: 'Pacing changes unnaturally abrupt',
+        [TestType.SIT_AND_REACH]: 'Transition speed between positions unnatural',
+        [TestType.STANDING_VERTICAL_JUMP]: 'Recovery movements unnaturally fast'
       }
     };
 

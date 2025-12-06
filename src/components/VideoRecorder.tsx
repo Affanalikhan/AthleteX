@@ -197,9 +197,14 @@ const VideoRecorder: React.FC<VideoRecorderProps> = ({
 
   return (
     <Paper elevation={3} sx={{ p: 3 }}>
-      <Typography variant="h6" gutterBottom>
-        Video Assessment
-      </Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        <Typography variant="h6">
+          Video Assessment
+        </Typography>
+        <Alert severity="info" icon={false} sx={{ py: 0.5 }}>
+          🤖 AI will analyze your form after upload
+        </Alert>
+      </Box>
 
       {error && (
         <Alert severity="error" sx={{ mb: 2 }}>

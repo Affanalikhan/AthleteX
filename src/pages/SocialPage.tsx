@@ -3,10 +3,6 @@ import {
   Container,
   Typography,
   Box,
-  Card,
-  CardContent,
-  CardActions,
-  CardMedia,
   Avatar,
   IconButton,
   Button,
@@ -15,38 +11,39 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Divider,
   Chip,
   Stack,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
   Fab,
   Alert,
   Grid,
   Paper,
   Badge,
-  Tooltip
+  Tooltip,
+  Divider
 } from '@mui/material';
 import {
-  Favorite,
-  FavoriteBorder,
-  Comment as CommentIcon,
-  Share,
   Add,
   Image,
   VideoFile,
-  Send,
   Verified,
   TrendingUp,
   PersonAdd,
-  Star
+  Star,
+  Home,
+  Search,
+  Explore,
+  FavoriteBorder,
+  AddCircleOutline
 } from '@mui/icons-material';
 import { useAuth } from '../hooks/useAuth';
 import { SocialPost, Comment, MediaType } from '../models';
 import { demoAthletes, motivationalQuotes, AthleteProfile } from '../data/demoData';
 import AthleteProfileView from '../components/AthleteProfileView';
+import StoriesBar from '../components/StoriesBar';
+import InstagramPost from '../components/InstagramPost';
+import RecruitmentCampaigns from '../components/RecruitmentCampaigns';
+import StoryViewer from '../components/StoryViewer';
+import socialService, { Story as SocialStory } from '../services/socialService';
 
 const SocialPage: React.FC = () => {
   const { user } = useAuth();
@@ -57,9 +54,34 @@ const SocialPage: React.FC = () => {
   const [commentInputs, setCommentInputs] = useState<{ [key: string]: string }>({});
   const [selectedAthlete, setSelectedAthlete] = useState<AthleteProfile | null>(null);
   const [profileModalOpen, setProfileModalOpen] = useState(false);
+  
+  // Stories data from social service
+  const [stories, setStories] = useState<SocialStory[]>([]);
+  const [storyViewerOpen, setStoryViewerOpen] = useState(false);
+  const [selectedStoryIndex, setSelectedStoryIndex] = useState(0);
+
+  // Load stories
+  useEffect(() => {
+    const loadedStories = socialService.getStories();
+    console.log('Loaded stories:', loadedStories);
+    setStories(loadedStories);
+  }, []);
 
   // Load demo posts on mount
   useEffect(() => {
+    // Clear localStorage if it's corrupted or empty
+    const storedData = localStorage.getItem('athletex_social_posts');
+    if (storedData) {
+      try {
+        const parsed = JSON.parse(storedData);
+        if (!Array.isArray(parsed) || parsed.length === 0) {
+          localStorage.removeItem('athletex_social_posts');
+        }
+      } catch {
+        localStorage.removeItem('athletex_social_posts');
+      }
+    }
+
     const demoPosts: SocialPost[] = [
       {
         id: '1',
@@ -306,7 +328,12 @@ const SocialPage: React.FC = () => {
             timestamp: new Date(comment.timestamp)
           }))
         }));
-        setPosts(parsedPosts);
+        // If stored posts is empty or invalid, use demo posts
+        if (parsedPosts.length > 0) {
+          setPosts(parsedPosts);
+        } else {
+          setPosts(demoPosts);
+        }
       } catch {
         setPosts(demoPosts);
       }
@@ -315,9 +342,11 @@ const SocialPage: React.FC = () => {
     }
   }, []);
 
-  // Save posts to localStorage whenever posts change
+  // Save posts to localStorage whenever posts change (but not if empty)
   useEffect(() => {
-    localStorage.setItem('athletex_social_posts', JSON.stringify(posts));
+    if (posts.length > 0) {
+      localStorage.setItem('athletex_social_posts', JSON.stringify(posts));
+    }
   }, [posts]);
 
   const handleLike = (postId: string) => {
@@ -425,285 +454,255 @@ const SocialPage: React.FC = () => {
   const trendingHashtags = ['#TrainingDay', '#PersonalRecord', '#TeamWork', '#NeverGiveUp', '#ChampionMindset'];
 
   return (
-    <Container maxWidth="xl" sx={{ py: 4 }}>
-      <Grid container spacing={3}>
-        {/* Main Content */}
-        <Grid item xs={12} md={8}>
-          <Typography variant="h4" component="h1" gutterBottom>
-            Social Feed
-          </Typography>
-          
-          {posts.length === 0 && (
-            <Alert severity="info" sx={{ mb: 3 }}>
-              No posts yet! Create your first post to get started.
-            </Alert>
-          )}
+    <Box sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
+      <Container maxWidth="lg" sx={{ py: 3 }}>
+        <Grid container spacing={4}>
+          {/* Main Feed */}
+          <Grid item xs={12} md={8}>
+            {/* Stories Bar */}
+            <Paper
+              elevation={0}
+              sx={{
+                p: 2,
+                mb: 3,
+                border: '1px solid',
+                borderColor: 'divider',
+                borderRadius: 1,
+              }}
+            >
+              {stories.length === 0 ? (
+                <Typography variant="body2" color="text.secondary" textAlign="center">
+                  Loading stories...
+                </Typography>
+              ) : (
+                <StoriesBar
+                  stories={stories.map(story => ({
+                    id: story.id,
+                    userName: story.userName,
+                    userAvatar: story.userAvatar,
+                    hasNewStory: !story.views.includes(user?.uid || ''),
+                  }))}
+                  onStoryClick={(id) => {
+                    console.log('Story clicked:', id);
+                    console.log('All stories:', stories);
+                    const index = stories.findIndex(s => s.id === id);
+                    console.log('Story index:', index);
+                    if (index !== -1) {
+                      setSelectedStoryIndex(index);
+                      setStoryViewerOpen(true);
+                      console.log('Opening story viewer, state:', { storyViewerOpen: true, selectedStoryIndex: index });
+                    }
+                  }}
+                  onAddStory={() => {
+                    // TODO: Implement add story functionality
+                    alert('Add story feature coming soon!');
+                  }}
+                />
+              )}
+            </Paper>
 
-          {/* Posts Feed */}
-          <Stack spacing={3}>
-            {posts.map((post) => (
-              <Card key={post.id} elevation={2}>
-            {/* Post Header */}
-            <CardContent sx={{ pb: 1 }}>
-              <Box display="flex" alignItems="center" mb={2}>
-                <Avatar sx={{ mr: 2 }}>
-                  {post.athleteName.charAt(0).toUpperCase()}
-                </Avatar>
-                <Box flex={1}>
-                  <Box display="flex" alignItems="center" gap={0.5}>
-                    <Typography 
-                      variant="subtitle1" 
-                      fontWeight="bold"
-                      sx={{ 
-                        cursor: 'pointer', 
-                        '&:hover': { color: 'primary.main' } 
-                      }}
-                      onClick={() => handleAthleteClick(post.athleteId)}
-                    >
-                      {post.athleteName}
-                    </Typography>
-                    {/* Show verified badge for some demo athletes */}
-                    {['sarah_johnson', 'emma_wilson', 'jordan_smith'].includes(post.athleteId) && (
-                      <Tooltip title="Verified Athlete">
-                        <Verified color="primary" sx={{ fontSize: 16 }} />
-                      </Tooltip>
-                    )}
-                  </Box>
-                  <Typography variant="caption" color="text.secondary">
-                    {formatTimestamp(post.timestamp)}
-                  </Typography>
-                </Box>
-              </Box>
-              
-              {/* Post Content */}
-              <Typography variant="body1" mb={2}>
-                {post.content}
-              </Typography>
-            </CardContent>
-
-            {/* Media */}
-            {post.mediaUrl && (
-              <CardMedia
-                component={post.mediaType === MediaType.VIDEO ? 'video' : 'img'}
-                sx={{ height: 300 }}
-                image={post.mediaType === MediaType.IMAGE ? post.mediaUrl : undefined}
-                src={post.mediaType === MediaType.VIDEO ? post.mediaUrl : undefined}
-                controls={post.mediaType === MediaType.VIDEO}
+            {/* Story Viewer */}
+            {stories.length > 0 && (
+              <StoryViewer
+                open={storyViewerOpen}
+                stories={stories}
+                initialStoryIndex={selectedStoryIndex}
+                onClose={() => {
+                  console.log('Closing story viewer');
+                  setStoryViewerOpen(false);
+                }}
+                onView={(storyId) => {
+                  console.log('Marking story as viewed:', storyId);
+                  if (user?.uid) {
+                    socialService.viewStory(storyId, user.uid);
+                    // Reload stories to update viewed status
+                    const updatedStories = socialService.getStories();
+                    setStories(updatedStories);
+                  }
+                }}
               />
             )}
 
-            {/* Post Actions */}
-            <CardActions sx={{ px: 2, py: 1 }}>
-              <Button
-                startIcon={
-                  user && post.likedBy.includes(user.uid) ? 
-                    <Favorite color="error" /> : 
-                    <FavoriteBorder />
-                }
-                onClick={() => handleLike(post.id)}
-                size="small"
-              >
-                {post.likes}
-              </Button>
-              <Button startIcon={<CommentIcon />} size="small">
-                {post.comments.length}
-              </Button>
-              <Button startIcon={<Share />} size="small">
-                Share
-              </Button>
-            </CardActions>
+            {posts.length === 0 && (
+              <Alert severity="info" sx={{ mb: 3 }}>
+                No posts yet! Create your first post to get started.
+              </Alert>
+            )}
 
-            <Divider />
-
-            {/* Comments */}
-            <CardContent sx={{ pt: 1 }}>
-              {post.comments.length > 0 && (
-                <List dense sx={{ mb: 2 }}>
-                  {post.comments.map((comment) => (
-                    <ListItem key={comment.id} sx={{ px: 0 }}>
-                      <ListItemAvatar>
-                        <Avatar sx={{ width: 32, height: 32 }}>
-                          {comment.athleteName.charAt(0).toUpperCase()}
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={
-                          <Box>
-                            <Typography variant="subtitle2" component="span" fontWeight="bold">
-                              {comment.athleteName}
-                            </Typography>
-                            <Typography variant="caption" color="text.secondary" sx={{ ml: 1 }}>
-                              {formatTimestamp(comment.timestamp)}
-                            </Typography>
-                          </Box>
-                        }
-                        secondary={comment.content}
-                      />
-                    </ListItem>
-                  ))}
-                </List>
-              )}
-              
-              {/* Comment Input */}
-              <Box display="flex" alignItems="center" gap={1}>
-                <Avatar sx={{ width: 32, height: 32 }}>
-                  {user?.displayName?.charAt(0).toUpperCase() || 'U'}
-                </Avatar>
-                <TextField
-                  fullWidth
-                  placeholder="Write a comment..."
-                  variant="outlined"
-                  size="small"
-                  value={commentInputs[post.id] || ''}
-                  onChange={(e) => setCommentInputs(prev => ({
-                    ...prev,
-                    [post.id]: e.target.value
-                  }))}
-                  onKeyPress={(e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                      e.preventDefault();
-                      handleComment(post.id);
-                    }
-                  }}
-                />
-                <IconButton
-                  color="primary"
-                  onClick={() => handleComment(post.id)}
-                  disabled={!commentInputs[post.id]?.trim()}
-                >
-                  <Send />
-                </IconButton>
-              </Box>
-            </CardContent>
-          </Card>
+            {/* Posts Feed */}
+            {posts.map((post) => (
+              <InstagramPost
+                key={post.id}
+                post={post}
+                currentUserId={user?.uid}
+                onLike={handleLike}
+                onComment={(postId, comment) => {
+                  setCommentInputs(prev => ({ ...prev, [postId]: comment }));
+                  handleComment(postId);
+                }}
+                onShare={(postId) => console.log('Share post:', postId)}
+                onUserClick={handleAthleteClick}
+              />
             ))}
-          </Stack>
-        </Grid>
+          </Grid>
 
-        {/* Sidebar */}
-        <Grid item xs={12} md={4}>
-          <Stack spacing={3}>
-            {/* Daily Motivation */}
-            <Paper sx={{ p: 2, background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white' }}>
-              <Box display="flex" alignItems="center" mb={1}>
-                <Star sx={{ mr: 1 }} />
-                <Typography variant="h6">Daily Motivation</Typography>
-              </Box>
-              <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
-                "{getRandomQuote()}"
-              </Typography>
-            </Paper>
-
-            {/* Featured Athletes */}
-            <Paper sx={{ p: 2 }}>
-              <Typography variant="h6" gutterBottom>
-                Featured Athletes
-              </Typography>
-              <Stack spacing={2}>
-                {featuredAthletes.map((athlete) => (
-                  <Box key={athlete.id} display="flex" alignItems="center" gap={2}>
-                    <Avatar sx={{ bgcolor: 'primary.main' }}>
-                      {athlete.name.charAt(0)}
+          {/* Sidebar */}
+          <Grid item xs={12} md={4}>
+            <Box sx={{ position: 'sticky', top: 80 }}>
+              <Stack spacing={3}>
+                {/* User Profile Card */}
+                <Paper elevation={0} sx={{ p: 2, border: '1px solid', borderColor: 'divider' }}>
+                  <Box display="flex" alignItems="center" gap={2} mb={2}>
+                    <Avatar sx={{ width: 56, height: 56 }}>
+                      {user?.displayName?.charAt(0).toUpperCase() || 'U'}
                     </Avatar>
-                    <Box 
-                      flex={1} 
-                      sx={{ cursor: 'pointer' }}
-                      onClick={() => handleAthleteClick(athlete.id)}
-                    >
-                      <Box display="flex" alignItems="center" gap={0.5}>
-                        <Typography 
-                          variant="subtitle2" 
-                          fontWeight="bold"
-                          sx={{ '&:hover': { color: 'primary.main' } }}
-                        >
-                          {athlete.name}
-                        </Typography>
-                        {athlete.verified && (
-                          <Verified color="primary" sx={{ fontSize: 14 }} />
-                        )}
-                      </Box>
-                      <Typography variant="caption" color="text.secondary">
-                        {athlete.sport} • {athlete.location}
+                    <Box flex={1}>
+                      <Typography variant="subtitle2" fontWeight="bold">
+                        {user?.displayName || 'Athlete'}
                       </Typography>
-                      <Typography variant="caption" display="block" color="text.secondary">
-                        {athlete.followers.toLocaleString()} followers
+                      <Typography variant="caption" color="text.secondary">
+                        {user?.email}
                       </Typography>
                     </Box>
-                    <Button size="small" startIcon={<PersonAdd />} variant="outlined">
-                      Follow
+                  </Box>
+                  <Button fullWidth variant="outlined" size="small">
+                    View Profile
+                  </Button>
+                </Paper>
+
+                {/* Suggestions */}
+                <Paper elevation={0} sx={{ p: 2, border: '1px solid', borderColor: 'divider' }}>
+                  <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                    <Typography variant="subtitle2" color="text.secondary" fontWeight="bold">
+                      Suggestions For You
+                    </Typography>
+                    <Button size="small" sx={{ textTransform: 'none', minWidth: 0, p: 0 }}>
+                      See All
                     </Button>
                   </Box>
-                ))}
-              </Stack>
-            </Paper>
+                  <Stack spacing={2}>
+                    {featuredAthletes.slice(0, 5).map((athlete) => (
+                      <Box key={athlete.id} display="flex" alignItems="center" gap={2}>
+                        <Avatar
+                          sx={{ width: 40, height: 40, cursor: 'pointer' }}
+                          onClick={() => handleAthleteClick(athlete.id)}
+                        >
+                          {athlete.name.charAt(0)}
+                        </Avatar>
+                        <Box
+                          flex={1}
+                          sx={{ cursor: 'pointer' }}
+                          onClick={() => handleAthleteClick(athlete.id)}
+                        >
+                          <Box display="flex" alignItems="center" gap={0.5}>
+                            <Typography variant="subtitle2" fontWeight="bold">
+                              {athlete.name}
+                            </Typography>
+                            {athlete.verified && (
+                              <Verified color="primary" sx={{ fontSize: 14 }} />
+                            )}
+                          </Box>
+                          <Typography variant="caption" color="text.secondary">
+                            {athlete.sport}
+                          </Typography>
+                        </Box>
+                        <Button
+                          size="small"
+                          sx={{ textTransform: 'none', fontWeight: 'bold', minWidth: 0 }}
+                        >
+                          Follow
+                        </Button>
+                      </Box>
+                    ))}
+                  </Stack>
+                </Paper>
 
-            {/* Trending Hashtags */}
-            <Paper sx={{ p: 2 }}>
-              <Box display="flex" alignItems="center" mb={2}>
-                <TrendingUp sx={{ mr: 1 }} />
-                <Typography variant="h6">Trending</Typography>
-              </Box>
-              <Stack spacing={1}>
-                {trendingHashtags.map((hashtag, index) => (
-                  <Box key={hashtag} display="flex" alignItems="center" justifyContent="space-between">
-                    <Typography variant="body2" color="primary" sx={{ cursor: 'pointer', '&:hover': { textDecoration: 'underline' } }}>
-                      {hashtag}
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                      {Math.floor(Math.random() * 100) + 50}k posts
+                {/* SAI Recruitment Campaigns */}
+                <RecruitmentCampaigns />
+
+                {/* Trending */}
+                <Paper elevation={0} sx={{ p: 2, border: '1px solid', borderColor: 'divider' }}>
+                  <Box display="flex" alignItems="center" mb={2}>
+                    <TrendingUp sx={{ mr: 1, fontSize: 20 }} />
+                    <Typography variant="subtitle2" fontWeight="bold">
+                      Trending
                     </Typography>
                   </Box>
-                ))}
+                  <Stack spacing={1.5}>
+                    {trendingHashtags.map((hashtag) => (
+                      <Box key={hashtag}>
+                        <Typography
+                          variant="body2"
+                          color="primary"
+                          fontWeight="bold"
+                          sx={{ cursor: 'pointer', '&:hover': { textDecoration: 'underline' } }}
+                        >
+                          {hashtag}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          {Math.floor(Math.random() * 100) + 50}k posts
+                        </Typography>
+                      </Box>
+                    ))}
+                  </Stack>
+                </Paper>
+
+                {/* Footer Links */}
+                <Box sx={{ px: 2 }}>
+                  <Typography variant="caption" color="text.secondary">
+                    © 2024 AthleteX • Terms • Privacy • Help
+                  </Typography>
+                </Box>
               </Stack>
-            </Paper>
-
-            {/* Quick Stats */}
-            <Paper sx={{ p: 2 }}>
-              <Typography variant="h6" gutterBottom>
-                Community Stats
-              </Typography>
-              <Grid container spacing={2}>
-                <Grid item xs={6}>
-                  <Typography variant="h4" color="primary" fontWeight="bold">
-                    {demoAthletes.length}
-                  </Typography>
-                  <Typography variant="caption">Active Athletes</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="h4" color="secondary" fontWeight="bold">
-                    {posts.length}
-                  </Typography>
-                  <Typography variant="caption">Recent Posts</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="h4" color="success.main" fontWeight="bold">
-                    {Math.floor(Math.random() * 50) + 100}
-                  </Typography>
-                  <Typography variant="caption">PRs This Week</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="h4" color="warning.main" fontWeight="bold">
-                    {Math.floor(Math.random() * 20) + 30}
-                  </Typography>
-                  <Typography variant="caption">Competitions</Typography>
-                </Grid>
-              </Grid>
-            </Paper>
-          </Stack>
+            </Box>
+          </Grid>
         </Grid>
-      </Grid>
+      </Container>
 
-      {/* Floating Action Button */}
+      {/* Bottom Navigation (Mobile) */}
+      <Paper
+        elevation={3}
+        sx={{
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          display: { xs: 'flex', md: 'none' },
+          justifyContent: 'space-around',
+          py: 1,
+          borderTop: '1px solid',
+          borderColor: 'divider',
+        }}
+      >
+        <IconButton>
+          <Home />
+        </IconButton>
+        <IconButton>
+          <Search />
+        </IconButton>
+        <IconButton onClick={() => setOpenCreatePost(true)}>
+          <AddCircleOutline />
+        </IconButton>
+        <IconButton>
+          <FavoriteBorder />
+        </IconButton>
+        <Avatar sx={{ width: 28, height: 28 }}>
+          {user?.displayName?.charAt(0).toUpperCase() || 'U'}
+        </Avatar>
+      </Paper>
+
+      {/* Floating Action Button (Desktop) */}
       <Fab
         color="primary"
-        sx={{ position: 'fixed', bottom: 16, right: 16 }}
+        sx={{ position: 'fixed', bottom: 24, right: 24, display: { xs: 'none', md: 'flex' } }}
         onClick={() => setOpenCreatePost(true)}
       >
         <Add />
       </Fab>
 
-      {/* Create Post Dialog */}
+      {/* Create Post Dialog - Keep existing */}
       <Dialog open={openCreatePost} onClose={() => setOpenCreatePost(false)} maxWidth="sm" fullWidth>
+
         <DialogTitle>Create New Post</DialogTitle>
         <DialogContent>
           <TextField
@@ -802,7 +801,7 @@ const SocialPage: React.FC = () => {
           )}
         </DialogContent>
       </Dialog>
-    </Container>
+    </Box>
   );
 };
 
