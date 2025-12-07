@@ -123,6 +123,23 @@ const LandingPage: React.FC = () => {
                 Trainer Portal
               </Button>
               <Button
+                variant="outlined"
+                startIcon={<School />}
+                onClick={() => navigate('/university-login')}
+                sx={{
+                  color: '#4caf50',
+                  borderColor: '#4caf50',
+                  textTransform: 'none',
+                  fontWeight: 500,
+                  '&:hover': {
+                    bgcolor: 'rgba(76, 175, 80, 0.1)',
+                    borderColor: '#4caf50'
+                  }
+                }}
+              >
+                University Portal
+              </Button>
+              <Button
                 variant="contained"
                 startIcon={<AdminPanelSettings />}
                 onClick={() => navigate('/sai-login')}
