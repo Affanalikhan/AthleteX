@@ -1,0 +1,122 @@
+================================================================================
+                    ENDURANCE RUN COACH - START HERE
+================================================================================
+
+Welcome! You've successfully extracted the Endurance Run Coach deployment package.
+
+This is an AI-powered running form analysis application that analyzes running
+videos and provides biomechanical feedback with coaching recommendations.
+
+================================================================================
+                         WHAT TO READ FIRST
+================================================================================
+
+1. QUICK_START.txt
+   → 5-minute setup guide to get running immediately
+   → Perfect if you want to test the app right away
+
+2. DEPLOYMENT_GUIDE.txt
+   → Complete installation and deployment instructions
+   → Detailed troubleshooting and configuration
+   → Read this for production deployment
+
+3. PROJECT_SUMMARY.txt
+   → Comprehensive overview of everything we built
+   → Technical architecture and features
+   → Perfect for understanding the complete system
+
+4. README.md
+   → Project overview and basic usage
+   → Tech stack information
+
+================================================================================
+                         QUICK START (2 STEPS)
+================================================================================
+
+STEP 1: Install & Start Backend
+--------------------------------
+Open terminal/command prompt:
+
+cd backend
+pip install -r requirements.txt
+python main.py
+
+✓ Backend will start on http://localhost:8000
+
+STEP 2: Install & Start Frontend
+---------------------------------
+Open a NEW terminal/command prompt:
+
+cd frontend
+npm install
+npm start
+
+✓ Frontend will open automatically at http://localhost:3000
+
+DONE! Upload a running video and click "Analyze Run"
+
+================================================================================
+                         WHAT'S INCLUDED
+================================================================================
+
+✓ Complete Backend API (Python + FastAPI)
+✓ Modern Frontend Application (React)
+✓ ML Model Training System (TensorFlow)
+✓ Comprehensive Documentation
+✓ Deployment Scripts
+✓ Testing Utilities
+
+================================================================================
+                         SYSTEM REQUIREMENTS
+================================================================================
+
+- Python 3.8 or higher
+- Node.js 14.x or higher
+- 2GB RAM minimum
+- Modern web browser (Chrome, Firefox, Safari, Edge)
+
+================================================================================
+                         NEED HELP?
+================================================================================
+
+Check these files in order:
+1. QUICK_START.txt - Basic setup
+2. DEPLOYMENT_GUIDE.txt - Detailed instructions
+3. PROJECT_SUMMARY.txt - Complete system overview
+
+Common Issues:
+- Backend won't start? → Check Python version, reinstall dependencies
+- Frontend won't start? → Check Node.js version, delete node_modules and reinstall
+- Can't upload video? → Check file size (max 50MB) and format (MP4, MOV, AVI)
+
+================================================================================
+                         FILE STRUCTURE
+================================================================================
+
+backend/                 → Python FastAPI server
+frontend/                → React web application
+model/                   → ML training system
+scripts/                 → Utility scripts
+docs/                    → Technical documentation
+
+DEPLOYMENT_GUIDE.txt     → Complete setup instructions
+QUICK_START.txt          → 5-minute setup guide
+PROJECT_SUMMARY.txt      → Full project overview
+README.md                → Project overview
+
+================================================================================
+                         NEXT STEPS
+================================================================================
+
+1. Read QUICK_START.txt for immediate setup
+2. Follow the 2-step installation above
+3. Upload a test video (side view, 8-15 seconds)
+4. View your running analysis results!
+
+For production deployment, read DEPLOYMENT_GUIDE.txt
+
+================================================================================
+
+Ready to analyze your running form? Let's go! 🏃‍♂️
+
+================================================================================

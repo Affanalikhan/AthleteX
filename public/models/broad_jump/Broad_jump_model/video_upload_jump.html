@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Upload - Broad Jump Analysis</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .upload-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .upload-box {
+            border: 3px dashed #4CAF50;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            background: rgba(76, 175, 80, 0.1);
+            margin: 20px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .upload-box:hover {
+            background: rgba(76, 175, 80, 0.2);
+            border-color: #45a049;
+        }
+        
+        .upload-box.dragover {
+            background: rgba(76, 175, 80, 0.3);
+            border-color: #2e7d32;
+        }
+        
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        
+        #videoInput {
+            display: none;
+        }
+        
+        .video-container {
+            position: relative;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        #uploadedVideo {
+            width: 100%;
+            max-height: 500px;
+            border-radius: 10px;
+        }
+        
+        .canvas-container {
+            position: relative;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        #analysisCanvas {
+            width: 100%;
+            border-radius: 10px;
+            border: 2px solid #4CAF50;
+        }
+        
+        .calibration-section {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .instructions-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .instructions-box h3 {
+            margin-top: 0;
+            color: #1976D2;
+        }
+        
+        .instructions-box ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        
+        .instructions-box li {
+            margin: 8px 0;
+        }
+        
+        .result-box {
+            background: #c8e6c9;
+            border: 2px solid #4CAF50;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .result-box h2 {
+            color: #2e7d32;
+            margin-top: 0;
+        }
+        
+        .distance-display {
+            font-size: 48px;
+            font-weight: bold;
+            color: #1b5e20;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .control-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #45a049;
+        }
+        
+        .btn-secondary {
+            background: #2196F3;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #0b7dda;
+        }
+        
+        .btn-danger {
+            background: #f44336;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #da190b;
+        }
+        
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #f0f0f0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            width: 0%;
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .status-message {
+            text-align: center;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .status-message.info {
+            background: #e3f2fd;
+            color: #1976D2;
+        }
+        
+        .status-message.success {
+            background: #c8e6c9;
+            color: #2e7d32;
+        }
+        
+        .status-message.error {
+            background: #ffcdd2;
+            color: #c62828;
+        }
+    </style>
+</head>
+<body>
+    <div class="upload-container">
+        <h1>📹 Video Upload - Broad Jump Analysis</h1>
+        
+        <div class="instructions-box">
+            <h3>📋 Instructions for Best Results</h3>
+            <ul>
+                <li><strong>Camera Position:</strong> Video must be recorded from the SIDE (not front)</li>
+                <li><strong>Person Position:</strong> Jumper should be SIDEWAYS to camera</li>
+                <li><strong>Jump Direction:</strong> Jump should be FORWARD (perpendicular to camera)</li>
+                <li><strong>Video Quality:</strong> Clear, stable video with good lighting</li>
+                <li><strong>Full View:</strong> Entire jump from start to landing should be visible</li>
+                <li><strong>Reference Object:</strong> Include a known-size object (ruler, tape, etc.) for calibration</li>
+            </ul>
+        </div>
+        
+        <div class="instructions-box" style="background: #fff3e0; border-left: 4px solid #ff9800;">
+            <h3 style="color: #e65100;">📌 Broad Jump (Standing Long Jump) – Official Rules</h3>
+            <h4 style="color: #e65100; margin-top: 15px;">1️⃣ Starting Position</h4>
+            <ul>
+                <li>The athlete must stand behind the take-off line</li>
+                <li>Feet should be parallel and shoulder-width apart</li>
+                <li>No running or taking steps before the jump — it must be a standing start</li>
+                <li>A slight rocking motion is allowed (back and forth), but feet must not leave the ground before the jump</li>
+            </ul>
+            <h4 style="color: #e65100; margin-top: 15px;">2️⃣ Take-Off Rules</h4>
+            <ul>
+                <li>The jump is performed using both legs together</li>
+                <li>The athlete must push off with both feet simultaneously</li>
+            </ul>
+        </div>
+        
+        <div class="upload-box" id="uploadBox">
+            <div class="upload-icon">📁</div>
+            <h2>Upload Video File</h2>
+            <p>Click to select or drag and drop your video file here</p>
+            <p style="color: #666; font-size: 14px;">Supported formats: MP4, AVI, MOV, WebM</p>
+            <input type="file" id="videoInput" accept="video/*">
+        </div>
+        
+        <div class="video-container" id="videoContainer">
+            <h3>Uploaded Video</h3>
+            <video id="uploadedVideo" controls></video>
+        </div>
+        
+        <div class="calibration-section" id="calibrationSection">
+            <h3>🎯 Step 1: Calibration</h3>
+            
+            <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                <h4 style="margin-top: 0; color: #1976D2;">Option A: Automatic Calibration (Recommended)</h4>
+                <p style="margin: 10px 0;">Uses the person's height for automatic calibration</p>
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <label style="font-weight: bold;">Person's Height (meters):</label>
+                    <input type="number" id="personHeight" step="0.01" min="1.0" max="2.5" value="1.70" style="padding: 10px; font-size: 16px; width: 100px;">
+                    <button class="btn btn-primary" id="autoCalibrationBtn">🤖 Auto Calibrate</button>
+                </div>
+            </div>
+            
+            <div style="background: #fff3e0; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                <h4 style="margin-top: 0; color: #e65100;">Option B: Manual Calibration</h4>
+                <p style="font-size: 14px; margin-bottom: 10px;">
+                    <strong>Instructions:</strong><br>
+                    1. Play/pause the video to find a frame with a reference object (ruler, tape measure, etc.)<br>
+                    2. Click directly on the <strong>canvas below</strong> to mark Point 1<br>
+                    3. Click again on the canvas to mark Point 2<br>
+                    4. Enter the real distance between these points
+                </p>
+                <div class="control-buttons">
+                    <button class="btn btn-secondary" id="pauseBtn">▶️ Play Video</button>
+                    <button class="btn btn-danger" id="resetCalibrationBtn">🔄 Reset Points</button>
+                </div>
+                <div id="calibrationPoints" style="margin: 15px 0; font-size: 18px; min-height: 30px;"></div>
+                <div id="calibrationInput" style="display: none; margin-top: 15px; padding: 15px; background: #e8f5e9; border-radius: 8px;">
+                    <label style="font-size: 16px; font-weight: bold;">Enter real distance in meters: </label>
+                    <input type="number" id="realDistance" step="0.01" min="0.1" max="5" value="1.0" style="padding: 10px; font-size: 18px; width: 120px; margin: 0 10px;">
+                    <button class="btn btn-primary" id="confirmCalibrationBtn">✓ Confirm Calibration</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="canvas-container" id="canvasContainer">
+            <h3>📹 Video Canvas - Click Here to Select Calibration Points</h3>
+            <p style="color: #666; margin-bottom: 10px; font-style: italic;">
+                👆 Click directly on this canvas to mark your calibration points
+            </p>
+            <canvas id="analysisCanvas" style="cursor: crosshair;"></canvas>
+        </div>
+        
+        <div class="progress-bar" id="progressBar">
+            <div class="progress-fill" id="progressFill">0%</div>
+        </div>
+        
+        <div class="status-message" id="statusMessage"></div>
+        
+        <div class="control-buttons" id="analysisControls" style="display: none;">
+            <button class="btn btn-primary" id="analyzeBtn">Analyze Jump</button>
+            <button class="btn btn-secondary" id="newVideoBtn">Upload New Video</button>
+        </div>
+        
+        <div class="result-box" id="resultBox">
+            <h2>🎉 Jump Analysis Results</h2>
+            <div class="distance-display" id="distanceDisplay">-</div>
+            <div id="detailsDisplay"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection"></script>
+    <script src="video_upload_analysis.js"></script>
+</body>
+</html>

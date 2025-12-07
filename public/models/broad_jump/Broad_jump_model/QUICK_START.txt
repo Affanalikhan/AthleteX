@@ -1,0 +1,156 @@
+╔══════════════════════════════════════════════════════════════╗
+║     BROAD JUMP TEST - QUICK START GUIDE                     ║
+╚══════════════════════════════════════════════════════════════╝
+
+🚀 HOW TO RUN:
+
+Method 1: Using Python Server (RECOMMENDED)
+--------------------------------------------
+1. Open terminal/command prompt
+2. Run: python run_server.py
+3. Browser will open automatically
+4. Allow camera access
+5. Follow on-screen instructions
+
+Method 2: Manual Server
+-----------------------
+1. Open terminal in this folder
+2. Run: python -m http.server 8000
+3. Open browser: http://localhost:8000/simple_jump_test.html
+4. Allow camera access
+5. Follow instructions
+
+
+📋 WHAT YOU'LL SEE:
+
+1. Instructions Screen
+   - Read setup instructions
+   - Click "Start Test"
+
+2. Camera View
+   - System loads AI model
+   - Camera starts
+   - Voice says "System ready"
+
+3. Trial 1
+   - Press SPACE (or click button)
+   - Voice: "Trial 1. Stand in position"
+   - Stand still (system detects you)
+   - Voice: "READY, 3, 2, 1, START!"
+   - JUMP!
+   - Voice: "You jumped X meters"
+
+4. Trial 2 & 3
+   - Same process
+   - Press SPACE for each trial
+
+5. Results
+   - Shows all 3 trials
+   - Shows best jump
+   - Voice announces best result
+
+
+🎯 IMPORTANT SETUP:
+
+Camera Position:
+    📷 Camera
+    ↓
+    ┌─────────────────────────────────────┐
+    │                                     │
+    │  🚶 ═══════════► 🏃                │
+    │  You          Jump forward          │
+    │  (sideways)                         │
+    │                                     │
+    └─────────────────────────────────────┘
+
+✅ Camera on the SIDE (not front!)
+✅ You stand SIDEWAYS to camera
+✅ Jump FORWARD (perpendicular to camera)
+
+
+🎮 CONTROLS:
+
+SPACE - Start trial
+Click button - Start trial
+Skip Trial - Skip current trial
+
+
+🔊 VOICE INSTRUCTIONS:
+
+You will hear:
+- "Loading system. Please wait."
+- "System ready. Press space to start trial 1."
+- "Trial 1. Stand in position."
+- "READY"
+- "3"
+- "2"
+- "1"
+- "START!"
+- "You jumped 2.35 meters."
+- "Press space for next trial."
+- "Test complete. Your best jump was 2.45 meters."
+
+
+📊 DISTANCE CALCULATION:
+
+The system automatically calculates distance by:
+1. Detecting your body position
+2. Tracking ankle movement
+3. Measuring pixel distance
+4. Converting to meters (approximate)
+
+No calibration needed!
+No reference objects needed!
+Just jump and get results!
+
+
+🔧 TROUBLESHOOTING:
+
+"Page won't open"
+→ Must use local server (python run_server.py)
+→ Cannot just double-click HTML file
+
+"No voice"
+→ Check browser supports speech synthesis
+→ Check system volume
+→ Try Chrome browser (best support)
+
+"Camera not working"
+→ Allow camera permissions
+→ Close other apps using camera
+→ Try different browser
+
+"Jump not detected"
+→ Ensure sideways to camera
+→ Jump with more force
+→ Stay in camera view
+
+
+✅ BROWSER REQUIREMENTS:
+
+Best: Chrome 90+
+Good: Edge 90+, Firefox 88+
+OK: Safari 14+
+
+Must have:
+- Camera access
+- JavaScript enabled
+- Internet (for AI model)
+
+
+🎉 READY TO START:
+
+1. Run: python run_server.py
+2. Browser opens automatically
+3. Click "Start Test"
+4. Follow voice instructions
+5. Jump 3 times
+6. See your results!
+
+Total time: 3-5 minutes
+
+
+╔══════════════════════════════════════════════════════════════╗
+║  Just run: python run_server.py                             ║
+║  Then follow the voice instructions!                         ║
+╚══════════════════════════════════════════════════════════════╝

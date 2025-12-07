@@ -1,0 +1,27 @@
+# Core ML and Computer Vision
+mediapipe==0.10.9
+opencv-python==4.8.1.78
+numpy==1.24.3
+torch==2.1.0
+torchvision==0.16.0
+
+# Data handling
+pandas==2.1.3
+scikit-learn==1.3.2
+
+# API and Web
+fastapi==0.104.1
+uvicorn==0.24.0
+python-multipart==0.0.6
+
+# Database
+sqlalchemy==2.0.23
+psycopg2-binary==2.9.9
+
+# Utilities
+python-dotenv==1.0.0
+pydantic==2.5.0
+
+# ML Training
+roboflow==1.1.9
+tqdm==4.66.1

@@ -4,8 +4,9 @@
  * Handles offline functionality, caching, and background sync
  */
 
-const CACHE_NAME = 'athletex-v3.0.0';
-const RUNTIME_CACHE = 'athletex-runtime-v3.0.0';
+const CACHE_NAME = 'athletex-v3.1.0';
+const RUNTIME_CACHE = 'athletex-runtime-v3.1.0';
+const ML_MODELS_CACHE = 'athletex-models-v1';
 
 // Assets to cache on install
 const PRECACHE_ASSETS = [
@@ -16,6 +17,18 @@ const PRECACHE_ASSETS = [
   '/manifest.json',
   '/images/icon-192x192.png',
   '/images/icon-512x512.png',
+  '/offline.html',
+];
+
+// ML model files to cache (cache-first strategy)
+const ML_MODEL_PATTERNS = [
+  /\.json$/,
+  /\.bin$/,
+  /\.wasm$/,
+  /\.tflite$/,
+  /\/models\//,
+  /mediapipe/,
+  /tensorflow/
 ];
 
 // API endpoints to cache
@@ -49,7 +62,7 @@ self.addEventListener('activate', (event) => {
       .then((cacheNames) => {
         return Promise.all(
           cacheNames
-            .filter((name) => name !== CACHE_NAME && name !== RUNTIME_CACHE)
+            .filter((name) => name !== CACHE_NAME && name !== RUNTIME_CACHE && name !== ML_MODELS_CACHE)
             .map((name) => {
               console.log('[Service Worker] Deleting old cache:', name);
               return caches.delete(name);
@@ -65,8 +78,15 @@ self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // Skip cross-origin requests
-  if (url.origin !== location.origin) {
+  // Skip cross-origin requests (except for ML models)
+  const isMLModel = ML_MODEL_PATTERNS.some(pattern => pattern.test(url.href));
+  if (url.origin !== location.origin && !isMLModel) {
+    return;
+  }
+
+  // Handle ML model requests (cache-first for offline support)
+  if (isMLModel) {
+    event.respondWith(mlModelCacheStrategy(request));
     return;
   }
 
@@ -137,6 +157,35 @@ async function networkFirstStrategy(request) {
       return cached;
     }
     
+    throw error;
+  }
+}
+
+// ML Model cache strategy (cache-first for offline support)
+async function mlModelCacheStrategy(request) {
+  const cache = await caches.open(ML_MODELS_CACHE);
+  
+  // Try cache first
+  const cached = await cache.match(request);
+  if (cached) {
+    console.log('[Service Worker] ML model served from cache:', request.url);
+    return cached;
+  }
+
+  // If not in cache, fetch from network and cache it
+  try {
+    console.log('[Service Worker] Fetching ML model from network:', request.url);
+    const response = await fetch(request);
+    
+    if (response.ok) {
+      // Clone the response before caching
+      cache.put(request, response.clone());
+      console.log('[Service Worker] ML model cached:', request.url);
+    }
+    
+    return response;
+  } catch (error) {
+    console.error('[Service Worker] Failed to fetch ML model:', error);
     throw error;
   }
 }

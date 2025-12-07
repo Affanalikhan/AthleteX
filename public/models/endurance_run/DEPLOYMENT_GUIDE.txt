@@ -1,0 +1,392 @@
+================================================================================
+ENDURANCE RUN COACH - DEPLOYMENT GUIDE
+================================================================================
+
+PROJECT OVERVIEW
+================================================================================
+This is an AI-powered running form analysis application that uses computer 
+vision to analyze running videos and provide biomechanical feedback with 
+coaching recommendations.
+
+WHAT WE'VE BUILT
+================================================================================
+
+1. BACKEND (FastAPI - Python)
+   Location: /backend/
+   
+   Files:
+   - main.py: FastAPI server with video upload and analysis endpoints
+   - gait_analyzer.py: Original gait analysis using MediaPipe
+   - gait_analyzer_enhanced.py: Enhanced version with ML model integration
+   - requirements.txt: Python dependencies
+   
+   Features:
+   - Video upload endpoint (supports MP4, MOV, AVI up to 50MB)
+   - Real-time pose detection using MediaPipe
+   - Gait analysis calculating:
+     * Cadence (steps per minute)
+     * Ground contact time
+     * Stride symmetry
+     * Running efficiency score
+   - Coaching recommendations based on metrics
+   - CORS enabled for frontend integration
+
+2. FRONTEND (React)
+   Location: /frontend/
+   
+   Files:
+   - src/App.js: Main application component
+   - src/components/UploadSection.js: Video upload interface
+   - src/components/Dashboard.js: Results dashboard with metrics
+   - src/index.css: Global styles with TailwindCSS
+   - public/index.html: HTML template
+   
+   Features:
+   - Drag-and-drop video upload
+   - File validation (type and size)
+   - Loading states during analysis
+   - Interactive dashboard showing:
+     * Overall efficiency score
+     * Cadence metrics
+     * Ground contact time
+     * Stride symmetry
+     * Coaching feedback
+     * Recommended drills
+
+3. ML MODEL TRAINING SYSTEM
+   Location: /model/
+   
+   Files:
+   - train_gait_model.py: Neural network training script
+   - dataset_collector.py: Video dataset collection and preprocessing
+   - requirements.txt: ML-specific dependencies
+   - train_notes.md: Training process documentation
+   
+   Features:
+   - Custom dataset collection from running videos
+   - Feature extraction from pose landmarks
+   - Neural network model (TensorFlow/Keras)
+   - Model evaluation and validation
+   - Export trained model for production use
+
+4. SCRIPTS & UTILITIES
+   Location: /scripts/
+   
+   Files:
+   - train_pipeline.py: End-to-end training pipeline
+   - test_model.py: Model testing and validation
+   
+5. DOCUMENTATION
+   Location: /docs/
+   
+   Files:
+   - MODEL_ARCHITECTURE.md: ML model design and architecture
+   - TRAINING_GUIDE.md: Step-by-step training instructions
+
+SYSTEM REQUIREMENTS
+================================================================================
+
+Backend:
+- Python 3.8 or higher
+- pip (Python package manager)
+- 2GB RAM minimum
+- Webcam or video files for testing
+
+Frontend:
+- Node.js 14.x or higher
+- npm 6.x or higher
+- Modern web browser (Chrome, Firefox, Safari, Edge)
+
+INSTALLATION STEPS
+================================================================================
+
+STEP 1: Extract the ZIP file
+-----------------------------
+Extract all files to your desired location, maintaining the folder structure.
+
+STEP 2: Install Backend Dependencies
+-------------------------------------
+1. Open terminal/command prompt
+2. Navigate to the backend folder:
+   cd backend
+
+3. Install Python dependencies:
+   pip install -r requirements.txt
+
+   Key packages installed:
+   - fastapi: Web framework
+   - uvicorn: ASGI server
+   - opencv-python: Video processing
+   - mediapipe: Pose detection
+   - numpy: Numerical computations
+   - python-multipart: File upload handling
+
+STEP 3: Install Frontend Dependencies
+--------------------------------------
+1. Open a new terminal/command prompt
+2. Navigate to the frontend folder:
+   cd frontend
+
+3. Install Node.js dependencies:
+   npm install
+
+   Key packages installed:
+   - react: UI framework
+   - tailwindcss: CSS framework
+   - axios: HTTP client
+
+STEP 4: Start the Backend Server
+---------------------------------
+1. In the backend folder terminal:
+   python main.py
+
+2. Server will start on: http://localhost:8000
+3. API documentation available at: http://localhost:8000/docs
+
+STEP 5: Start the Frontend Application
+---------------------------------------
+1. In the frontend folder terminal:
+   npm start
+
+2. Application will open in browser at: http://localhost:3000
+3. If it doesn't open automatically, navigate to http://localhost:3000
+
+USAGE INSTRUCTIONS
+================================================================================
+
+1. PREPARE YOUR VIDEO
+   - Record a running video from the side view
+   - Duration: 8-15 seconds recommended
+   - Format: MP4, MOV, or AVI
+   - Size: Maximum 50MB
+   - Ensure good lighting and clear view of the runner
+
+2. UPLOAD AND ANALYZE
+   - Drag and drop video onto the upload area, OR
+   - Click "Choose File" to select video
+   - Click "Analyze Run" button
+   - Wait for analysis to complete (typically 10-30 seconds)
+
+3. VIEW RESULTS
+   The dashboard will display:
+   - Overall Efficiency Score (0-100)
+   - Cadence (steps per minute)
+   - Ground Contact Time (milliseconds)
+   - Stride Symmetry (percentage)
+   - Personalized coaching feedback
+   - Recommended training drills
+
+TRAINING YOUR OWN MODEL (OPTIONAL)
+================================================================================
+
+If you want to train a custom model with your own data:
+
+1. Collect Training Data:
+   cd model
+   python dataset_collector.py
+   
+   - Add your running videos to a dataset folder
+   - Label them with performance metrics
+
+2. Train the Model:
+   python train_gait_model.py
+   
+   - Model will train on your dataset
+   - Training progress will be displayed
+   - Trained model saved as 'gait_model.h5'
+
+3. Integrate Trained Model:
+   - Copy 'gait_model.h5' to backend folder
+   - Update backend/main.py to use gait_analyzer_enhanced.py
+   - Restart backend server
+
+For detailed training instructions, see: docs/TRAINING_GUIDE.md
+
+DEPLOYMENT TO PRODUCTION
+================================================================================
+
+BACKEND DEPLOYMENT:
+1. Choose a hosting platform (AWS, Google Cloud, Heroku, DigitalOcean)
+2. Set up Python environment
+3. Install dependencies: pip install -r backend/requirements.txt
+4. Configure environment variables (if needed)
+5. Run with production server: uvicorn main:app --host 0.0.0.0 --port 8000
+6. Set up reverse proxy (nginx) for HTTPS
+
+FRONTEND DEPLOYMENT:
+1. Build production version:
+   cd frontend
+   npm run build
+
+2. Deploy 'build' folder to:
+   - Netlify
+   - Vercel
+   - AWS S3 + CloudFront
+   - GitHub Pages
+   - Any static hosting service
+
+3. Update API endpoint in frontend code to point to production backend URL
+
+TROUBLESHOOTING
+================================================================================
+
+Backend Issues:
+---------------
+- "Module not found": Run pip install -r requirements.txt again
+- "Port already in use": Change port in main.py or kill process using port 8000
+- "Video processing error": Ensure video format is supported (MP4, MOV, AVI)
+- "MediaPipe error": Update mediapipe: pip install --upgrade mediapipe
+
+Frontend Issues:
+----------------
+- "npm install fails": Delete node_modules and package-lock.json, run npm install again
+- "Cannot connect to backend": Ensure backend is running on port 8000
+- "CORS error": Check CORS settings in backend/main.py
+- "Build fails": Clear cache with npm cache clean --force
+
+Video Upload Issues:
+-------------------
+- File too large: Compress video or reduce duration
+- Unsupported format: Convert to MP4 using video converter
+- Analysis fails: Ensure runner is clearly visible in frame
+
+ARCHITECTURE OVERVIEW
+================================================================================
+
+Data Flow:
+1. User uploads video via React frontend
+2. Frontend sends video to FastAPI backend via HTTP POST
+3. Backend processes video with OpenCV
+4. MediaPipe extracts pose landmarks from each frame
+5. Gait analyzer calculates biomechanical metrics
+6. Results sent back to frontend as JSON
+7. Dashboard displays metrics and recommendations
+
+Key Technologies:
+- MediaPipe: Google's ML solution for pose detection
+- OpenCV: Computer vision library for video processing
+- FastAPI: Modern Python web framework
+- React: JavaScript library for UI
+- TailwindCSS: Utility-first CSS framework
+
+FOLDER STRUCTURE
+================================================================================
+
+endurance-run-coach/
+├── backend/                    # Python FastAPI server
+│   ├── main.py                # API endpoints
+│   ├── gait_analyzer.py       # Analysis logic
+│   ├── gait_analyzer_enhanced.py  # ML-enhanced version
+│   └── requirements.txt       # Python dependencies
+├── frontend/                   # React application
+│   ├── public/                # Static files
+│   ├── src/                   # Source code
+│   │   ├── components/        # React components
+│   │   ├── App.js            # Main app
+│   │   └── index.js          # Entry point
+│   └── package.json          # Node dependencies
+├── model/                      # ML training system
+│   ├── train_gait_model.py   # Training script
+│   ├── dataset_collector.py  # Data collection
+│   └── requirements.txt      # ML dependencies
+├── scripts/                    # Utility scripts
+│   ├── train_pipeline.py     # Training automation
+│   └── test_model.py         # Model testing
+├── docs/                       # Documentation
+│   ├── MODEL_ARCHITECTURE.md
+│   └── TRAINING_GUIDE.md
+└── README.md                   # Project overview
+
+API ENDPOINTS
+================================================================================
+
+POST /analyze
+- Description: Upload and analyze running video
+- Content-Type: multipart/form-data
+- Parameters: file (video file)
+- Response: JSON with metrics and recommendations
+
+GET /
+- Description: Health check endpoint
+- Response: {"message": "Endurance Run Coach API"}
+
+GET /docs
+- Description: Interactive API documentation (Swagger UI)
+
+METRICS EXPLAINED
+================================================================================
+
+1. CADENCE (steps/minute)
+   - Optimal range: 170-180 spm
+   - Higher cadence often indicates better efficiency
+   - Lower cadence may increase injury risk
+
+2. GROUND CONTACT TIME (milliseconds)
+   - Optimal range: 200-250ms
+   - Shorter contact time = more efficient running
+   - Longer contact time may indicate overstriding
+
+3. STRIDE SYMMETRY (percentage)
+   - Optimal: 95-100%
+   - Measures balance between left and right strides
+   - Low symmetry may indicate injury or imbalance
+
+4. EFFICIENCY SCORE (0-100)
+   - Composite score based on all metrics
+   - 80-100: Excellent
+   - 60-79: Good
+   - 40-59: Fair
+   - Below 40: Needs improvement
+
+FUTURE ENHANCEMENTS
+================================================================================
+
+Potential features to add:
+- Real-time video analysis during recording
+- Multiple camera angles support
+- Historical tracking and progress charts
+- Social features (share results, compare with others)
+- Mobile app version
+- Integration with wearable devices
+- Advanced biomechanical analysis (joint angles, force estimation)
+- Injury risk prediction
+- Personalized training plans
+
+SUPPORT & CONTACT
+================================================================================
+
+For issues, questions, or contributions:
+- Check documentation in /docs folder
+- Review code comments in source files
+- Test with sample videos first
+- Ensure all dependencies are correctly installed
+
+VERSION HISTORY
+================================================================================
+
+Current Version: 1.0.0
+- Initial release with core features
+- Video upload and analysis
+- Gait metrics calculation
+- Dashboard visualization
+- Coaching recommendations
+- ML model training system
+
+LICENSE
+================================================================================
+
+[Add your license information here]
+
+CREDITS
+================================================================================
+
+Built with:
+- MediaPipe by Google
+- OpenCV
+- FastAPI
+- React
+- TailwindCSS
+
+================================================================================
+END OF DEPLOYMENT GUIDE
+================================================================================

@@ -1,0 +1,214 @@
+.dashboard {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.reset-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 2rem;
+  font-size: 1rem;
+  transition: all 0.3s;
+}
+
+.reset-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.metric-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.metric-tile {
+  background: linear-gradient(135deg, #1e2a4a 0%, #2d3a5f 100%);
+  border: 1px solid rgba(79, 172, 254, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.metric-tile:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(79, 172, 254, 0.3);
+}
+
+.metric-value {
+  font-size: 3rem;
+  font-weight: bold;
+  background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.5rem;
+}
+
+.metric-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #e2e8f0;
+}
+
+.metric-subtitle {
+  font-size: 0.85rem;
+  color: #a0aec0;
+}
+
+.performance-section,
+.improvements-section,
+.exercises-section,
+.technical-section {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.performance-section h2,
+.improvements-section h2,
+.exercises-section h2,
+.technical-section h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: #4facfe;
+}
+
+.performance-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.performance-stats p {
+  background: rgba(79, 172, 254, 0.1);
+  padding: 0.75rem;
+  border-radius: 8px;
+  border-left: 3px solid #4facfe;
+}
+
+.highlights {
+  list-style: none;
+}
+
+.highlights li {
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+  background: rgba(72, 187, 120, 0.1);
+  border-left: 3px solid #48bb78;
+  border-radius: 4px;
+  color: #e2e8f0;
+}
+
+.improvements-section ul {
+  list-style: none;
+}
+
+.improvements-section li {
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  background: rgba(237, 137, 54, 0.1);
+  border-left: 3px solid #ed8936;
+  border-radius: 4px;
+  color: #e2e8f0;
+}
+
+.exercise-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.exercise-card {
+  background: linear-gradient(135deg, #1e2a4a 0%, #2d3a5f 100%);
+  border: 1px solid rgba(79, 172, 254, 0.2);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: transform 0.3s;
+}
+
+.exercise-card:hover {
+  transform: translateY(-5px);
+}
+
+.exercise-card h3 {
+  color: #4facfe;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.exercise-card p {
+  margin-bottom: 0.75rem;
+  color: #cbd5e0;
+  line-height: 1.6;
+}
+
+.difficulty {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+.difficulty.beginner {
+  background: rgba(72, 187, 120, 0.2);
+  color: #48bb78;
+}
+
+.difficulty.intermediate {
+  background: rgba(237, 137, 54, 0.2);
+  color: #ed8936;
+}
+
+.difficulty.advanced {
+  background: rgba(245, 101, 101, 0.2);
+  color: #f56565;
+}
+
+.technical-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.technical-grid h3 {
+  color: #4facfe;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.technical-grid p {
+  color: #cbd5e0;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  background: rgba(79, 172, 254, 0.05);
+  border-radius: 4px;
+}
+
+.confidence {
+  padding: 1rem;
+  background: rgba(72, 187, 120, 0.1);
+  border-radius: 8px;
+  border-left: 3px solid #48bb78;
+  color: #e2e8f0;
+}
+
+.confidence-note {
+  color: #a0aec0;
+  font-size: 0.9rem;
+}

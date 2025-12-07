@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vertical Jump Coach</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .upload-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+        }
+        
+        .upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 60px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .upload-area:hover {
+            background: #f8f9ff;
+            border-color: #764ba2;
+        }
+        
+        .upload-area.dragover {
+            background: #f0f4ff;
+            border-color: #764ba2;
+        }
+        
+        .upload-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+        
+        .upload-text {
+            font-size: 1.3em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .upload-hint {
+            color: #666;
+        }
+        
+        input[type="file"] {
+            display: none;
+        }
+        
+        .analyze-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.2s;
+        }
+        
+        .analyze-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .analyze-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            display: none;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .results {
+            display: none;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .metric-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        
+        .metric-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+            margin: 10px 0;
+        }
+        
+        .metric-label {
+            color: #666;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .feedback-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+        
+        .feedback-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .positive-feedback {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        
+        .improvement {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        
+        .exercise-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+        }
+        
+        .exercise-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏀 Vertical Jump Coach</h1>
+            <p>Upload your jump video for instant analysis and personalized coaching</p>
+        </div>
+        
+        <div class="upload-section">
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📹</div>
+                <div class="upload-text">Drop your jump video here or click to browse</div>
+                <div class="upload-hint">Supports MP4, MOV, AVI (max 50MB)</div>
+                <input type="file" id="videoInput" accept="video/*">
+            </div>
+            <div style="text-align: center;">
+                <button class="analyze-btn" id="analyzeBtn" disabled>Analyze Jump</button>
+            </div>
+            
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Analyzing your jump... This may take a moment.</p>
+            </div>
+            
+            <div class="error-message" id="errorMessage"></div>
+        </div>
+        
+        <div class="results" id="results">
+            <div class="metrics-grid" id="metricsGrid"></div>
+            
+            <div class="feedback-section">
+                <h2>📊 Your Performance</h2>
+                <div id="summary"></div>
+                <div id="positives"></div>
+            </div>
+            
+            <div class="feedback-section">
+                <h2>💡 Areas for Improvement</h2>
+                <div id="improvements"></div>
+            </div>
+            
+            <div class="feedback-section">
+                <h2>🏋️ Recommended Exercises</h2>
+                <div id="exercises"></div>
+            </div>
+            
+            <div class="feedback-section">
+                <h2>🔍 Technical Details</h2>
+                <div id="technicalDetails"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const uploadArea = document.getElementById('uploadArea');
+        const videoInput = document.getElementById('videoInput');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const loading = document.getElementById('loading');
+        const results = document.getElementById('results');
+        const errorMessage = document.getElementById('errorMessage');
+        
+        let selectedFile = null;
+        
+        // Upload area click
+        uploadArea.addEventListener('click', () => videoInput.click());
+        
+        // File selection
+        videoInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                selectedFile = e.target.files[0];
+                uploadArea.querySelector('.upload-text').textContent = `Selected: ${selectedFile.name}`;
+                analyzeBtn.disabled = false;
+            }
+        });
+        
+        // Drag and drop
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            
+            if (e.dataTransfer.files.length > 0) {
+                selectedFile = e.dataTransfer.files[0];
+                videoInput.files = e.dataTransfer.files;
+                uploadArea.querySelector('.upload-text').textContent = `Selected: ${selectedFile.name}`;
+                analyzeBtn.disabled = false;
+            }
+        });
+        
+        // Analyze button
+        analyzeBtn.addEventListener('click', async () => {
+            if (!selectedFile) return;
+            
+            // Hide previous results and errors
+            results.style.display = 'none';
+            errorMessage.style.display = 'none';
+            
+            // Show loading
+            loading.style.display = 'block';
+            analyzeBtn.disabled = true;
+            
+            try {
+                const formData = new FormData();
+                formData.append('video', selectedFile);
+                
+                const response = await fetch('http://localhost:8000/analyze', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Analysis failed');
+                }
+                
+                const data = await response.json();
+                displayResults(data);
+                
+            } catch (error) {
+                errorMessage.textContent = `Error: ${error.message}. Make sure the API server is running on port 8000.`;
+                errorMessage.style.display = 'block';
+            } finally {
+                loading.style.display = 'none';
+                analyzeBtn.disabled = false;
+            }
+        });
+        
+        function displayResults(data) {
+            // Display metrics
+            const metrics = data.jump_metrics;
+            const metricsGrid = document.getElementById('metricsGrid');
+            metricsGrid.innerHTML = `
+                <div class="metric-card">
+                    <div class="metric-label">Jump Height</div>
+                    <div class="metric-value">${metrics.height_cm} cm</div>
+                    <div class="metric-label">${metrics.height_inches} inches</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Quality Score</div>
+                    <div class="metric-value">${metrics.quality_score}/100</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Power Score</div>
+                    <div class="metric-value">${metrics.power_score.toFixed(0)}</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Explosiveness</div>
+                    <div class="metric-value">${metrics.explosiveness_rating.toFixed(0)}</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Takeoff Efficiency</div>
+                    <div class="metric-value">${metrics.takeoff_efficiency.toFixed(0)}</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Landing Control</div>
+                    <div class="metric-value">${metrics.landing_control_score.toFixed(0)}</div>
+                </div>
+            `;
+            
+            // Display summary
+            document.getElementById('summary').innerHTML = `<p style="font-size: 1.1em; margin: 15px 0;">${data.feedback.summary}</p>`;
+            
+            // Display positives
+            const positivesHtml = data.feedback.positives.map(p => 
+                `<div class="positive-feedback">✅ ${p}</div>`
+            ).join('');
+            document.getElementById('positives').innerHTML = positivesHtml;
+            
+            // Display improvements
+            const improvementsHtml = data.feedback.improvements.map(i => 
+                `<div class="improvement">💡 ${i}</div>`
+            ).join('');
+            document.getElementById('improvements').innerHTML = improvementsHtml || '<p>Great job! No major improvements needed.</p>';
+            
+            // Display exercises
+            const exercisesHtml = data.exercise_recommendations.map(ex => `
+                <div class="exercise-card">
+                    <h3>${ex.name}</h3>
+                    <p><strong>Target:</strong> ${ex.target_area}</p>
+                    <p>${ex.description}</p>
+                    <p><em>Difficulty: ${ex.difficulty}</em></p>
+                </div>
+            `).join('');
+            document.getElementById('exercises').innerHTML = exercisesHtml;
+            
+            // Display technical details
+            const phaseTiming = data.phase_timing;
+            const confidence = data.confidence;
+            let technicalHtml = `
+                <p><strong>Phase Timing:</strong></p>
+                <ul style="margin: 10px 0 20px 20px;">
+                    <li>Setup: ${phaseTiming.setup}ms</li>
+                    <li>Takeoff: ${phaseTiming.takeoff}ms</li>
+                    <li>Flight: ${phaseTiming.flight}ms</li>
+                    <li>Landing: ${phaseTiming.landing}ms</li>
+                </ul>
+                <p><strong>Confidence:</strong> ${confidence.percentage}%</p>
+                <p>${confidence.explanation}</p>
+            `;
+            
+            if (confidence.camera_tips) {
+                technicalHtml += '<p><strong>Camera Tips:</strong></p><ul style="margin: 10px 0 0 20px;">';
+                confidence.camera_tips.forEach(tip => {
+                    technicalHtml += `<li>${tip}</li>`;
+                });
+                technicalHtml += '</ul>';
+            }
+            
+            document.getElementById('technicalDetails').innerHTML = technicalHtml;
+            
+            // Show results
+            results.style.display = 'block';
+            results.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>30m Sprint Speed Test</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 { text-align: center; color: #333; margin-bottom: 30px; }
+        
+        .video-container {
+            position: relative;
+            width: 100%;
+            margin: 0 auto 30px;
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        #videoFeed, #uploadedVideo {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        #uploadedVideo { display: none; }
+        
+        .video-controls {
+            display: none;
+            justify-content: center;
+            gap: 10px;
+            padding: 10px;
+            background: rgba(0,0,0,0.7);
+        }
+        .video-controls.active { display: flex; }
+        .video-controls button {
+            padding: 8px 16px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        .video-controls button:hover { background: #5568d3; }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            cursor: crosshair;
+        }
+        
+        .mode-tabs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .tab-btn {
+            padding: 12px 30px;
+            font-size: 1em;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .tab-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+        .btn {
+            padding: 15px 30px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-primary { background: #667eea; color: white; }
+        .btn-success { background: #48bb78; color: white; }
+        .btn-warning { background: #ed8936; color: white; }
+        .btn-danger { background: #e53e3e; color: white; }
+        
+        .results {
+            background: #f7fafc;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .results h2 { color: #2d3748; margin-bottom: 20px; text-align: center; }
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            background: white;
+            margin-bottom: 10px;
+            border-radius: 8px;
+        }
+        .result-item .label { font-weight: 600; color: #4a5568; }
+        .result-item .value { font-size: 1.3em; color: #667eea; font-weight: 700; }
+        
+        .upload-box {
+            text-align: center;
+            padding: 20px;
+            background: #f7fafc;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        #fileName { margin-top: 10px; color: #4a5568; font-weight: bold; }
+        
+        .instructions {
+            background: #edf2f7;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .instructions h3 { color: #2d3748; margin-bottom: 15px; }
+        .instructions ol { margin-left: 20px; color: #4a5568; line-height: 1.8; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏃 30 Meter Sprint Speed Test</h1>
+        
+        <div class="video-container">
+            <img id="videoFeed" src="/video_feed" alt="Video Feed">
+            <video id="uploadedVideo" controls></video>
+            <canvas id="canvas"></canvas>
+        </div>
+        
+        <div id="videoControls" class="video-controls">
+            <button onclick="pauseVideo()">⏸️ Pause</button>
+            <button onclick="playVideo()">▶️ Play</button>
+            <button onclick="stepBackward()">⏪ Back 1s</button>
+            <button onclick="stepForward()">⏩ Forward 1s</button>
+        </div>
+        
+        <div class="mode-tabs">
+            <button class="tab-btn active" onclick="switchTab('live')">📹 Live Camera</button>
+            <button class="tab-btn" onclick="switchTab('upload')">📁 Upload Video</button>
+        </div>
+        
+        <div id="liveTab" class="tab-content active">
+            <div class="controls">
+                <button id="calibrateBtn" class="btn btn-primary" onclick="startCalibration()">Calibrate Lines</button>
+                <button id="startBtn" class="btn btn-success" onclick="startTest()" disabled>Start Test</button>
+                <button id="resetBtn" class="btn btn-warning" onclick="resetTest()" disabled>Reset</button>
+            </div>
+        </div>
+        
+        <div id="uploadTab" class="tab-content">
+            <div class="upload-box">
+                <input type="file" id="videoUpload" accept="video/*" style="display:none" onchange="handleVideoUpload(event)">
+                <button class="btn btn-primary" onclick="document.getElementById('videoUpload').click()">Select Video</button>
+                <p id="fileName"></p>
+            </div>
+            <div class="controls">
+                <button id="calibrateUploadBtn" class="btn btn-primary" onclick="startCalibration()" disabled>Calibrate Lines</button>
+                <button id="analyzeBtn" class="btn btn-success" onclick="analyzeVideo()" disabled>Analyze Video</button>
+                <button id="resetUploadBtn" class="btn btn-warning" onclick="resetUpload()" disabled>Reset</button>
+            </div>
+        </div>
+        
+        <div class="results">
+            <h2>Results</h2>
+            <div class="result-item">
+                <span class="label">Time:</span>
+                <span id="timeResult" class="value">--</span>
+            </div>
+            <div class="result-item">
+                <span class="label">Speed:</span>
+                <span id="speedResult" class="value">--</span>
+            </div>
+            <div class="result-item">
+                <span class="label">Distance:</span>
+                <span id="distanceResult" class="value">30 meters</span>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h3>Instructions</h3>
+            <ol>
+                <li><b>Live Camera:</b> Click "Calibrate Lines", mark START and FINISH (30m apart), click "Start Test"</li>
+                <li><b>Upload Video:</b> Select video, calibrate lines, click "Analyze Video"</li>
+                <li>Lines should be vertical and 30 meters apart in real world</li>
+                <li>Runner should move parallel to camera (left-to-right or right-to-left)</li>
+            </ol>
+        </div>
+    </div>
+    
+    <script>
+        let canvas, ctx;
+        let startLine = null, finishLine = null;
+        let calibrationStep = 0;
+        let currentMode = 'live';
+        let isRunning = false;
+        let checkInterval = null;
+        let videoElement = null;
+        
+        window.onload = function() {
+            canvas = document.getElementById('canvas');
+            ctx = canvas.getContext('2d');
+            videoElement = document.getElementById('uploadedVideo');
+            
+            const videoFeed = document.getElementById('videoFeed');
+            videoFeed.onload = function() {
+                canvas.width = videoFeed.naturalWidth || 1280;
+                canvas.height = videoFeed.naturalHeight || 720;
+            };
+            
+            canvas.addEventListener('click', handleCanvasClick);
+            
+            // Update canvas when video plays
+            videoElement.addEventListener('loadedmetadata', function() {
+                canvas.width = videoElement.videoWidth;
+                canvas.height = videoElement.videoHeight;
+            });
+            
+            setInterval(() => {
+                if (calibrationStep >= 1 && !isRunning) {
+                    drawLines();
+                }
+            }, 100);
+        };
+        
+        function switchTab(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            if (mode === 'live') {
+                document.querySelectorAll('.tab-btn')[0].classList.add('active');
+                document.getElementById('liveTab').classList.add('active');
+                document.getElementById('videoFeed').style.display = 'block';
+                document.getElementById('uploadedVideo').style.display = 'none';
+                document.getElementById('videoControls').classList.remove('active');
+            } else {
+                document.querySelectorAll('.tab-btn')[1].classList.add('active');
+                document.getElementById('uploadTab').classList.add('active');
+                document.getElementById('videoFeed').style.display = 'none';
+            }
+            
+            resetCalibration();
+        }
+        
+        function resetCalibration() {
+            startLine = null;
+            finishLine = null;
+            calibrationStep = 0;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+        
+        function startCalibration() {
+            resetCalibration();
+            if (currentMode === 'upload') {
+                // Pause video and go to beginning for calibration
+                videoElement.pause();
+                videoElement.currentTime = 0;
+                alert('Video paused at start. Click on the video to mark the START line (vertical) where the athlete begins running.');
+            } else {
+                alert('Click on the video to mark the START line (vertical)');
+            }
+        }
+        
+        function handleCanvasClick(e) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const x = Math.round((e.clientX - rect.left) * scaleX);
+            
+            if (calibrationStep === 0) {
+                startLine = x;
+                calibrationStep = 1;
+                fetch('/calibrate', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({start_line: startLine})
+                });
+                drawLines();
+                alert('START line marked! Now click to mark the FINISH line (30m away from START)');
+            } else if (calibrationStep === 1) {
+                finishLine = x;
+                calibrationStep = 2;
+                fetch('/calibrate', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({start_line: startLine, finish_line: finishLine})
+                });
+                drawLines();
+                
+                if (currentMode === 'live') {
+                    document.getElementById('startBtn').disabled = false;
+                    alert('Calibration complete! Click "Start Test" when ready.');
+                } else {
+                    document.getElementById('analyzeBtn').disabled = false;
+                    alert('Calibration complete! Click "Analyze Video" to calculate the athlete\'s speed.');
+                }
+            }
+        }
+        
+        function drawLines() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            if (startLine !== null) {
+                ctx.strokeStyle = '#00ff00';
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.moveTo(startLine, 0);
+                ctx.lineTo(startLine, canvas.height);
+                ctx.stroke();
+                ctx.fillStyle = '#00ff00';
+                ctx.font = 'bold 24px Arial';
+                ctx.fillText('START', startLine + 10, 30);
+            }
+            
+            if (finishLine !== null) {
+                ctx.strokeStyle = '#ff0000';
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.moveTo(finishLine, 0);
+                ctx.lineTo(finishLine, canvas.height);
+                ctx.stroke();
+                ctx.fillStyle = '#ff0000';
+                ctx.font = 'bold 24px Arial';
+                ctx.fillText('FINISH', finishLine + 10, 30);
+            }
+        }
+        
+        function startTest() {
+            isRunning = true;
+            document.getElementById('startBtn').disabled = true;
+            document.getElementById('calibrateBtn').disabled = true;
+            document.getElementById('resetBtn').disabled = false;
+            
+            fetch('/start_test', {method: 'POST'});
+            checkInterval = setInterval(checkStatus, 100);
+        }
+        
+        function checkStatus() {
+            fetch('/check_status')
+                .then(r => r.json())
+                .then(data => {
+                    if (data.finished) {
+                        clearInterval(checkInterval);
+                        displayResults(data);
+                    }
+                });
+        }
+        
+        function displayResults(data) {
+            isRunning = false;
+            document.getElementById('timeResult').textContent = data.time + ' seconds';
+            document.getElementById('speedResult').textContent = data.speed_kmh + ' km/h (' + data.speed_mps + ' m/s)';
+            document.getElementById('resetBtn').disabled = false;
+        }
+        
+        function resetTest() {
+            isRunning = false;
+            if (checkInterval) {
+                clearInterval(checkInterval);
+                checkInterval = null;
+            }
+            
+            fetch('/reset', {method: 'POST'});
+            
+            document.getElementById('timeResult').textContent = '--';
+            document.getElementById('speedResult').textContent = '--';
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('calibrateBtn').disabled = false;
+            document.getElementById('resetBtn').disabled = true;
+        }
+        
+        function handleVideoUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            document.getElementById('fileName').textContent = 'Uploading: ' + file.name;
+            
+            const formData = new FormData();
+            formData.append('video', file);
+            
+            fetch('/upload_video', {method: 'POST', body: formData})
+                .then(r => r.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        document.getElementById('fileName').textContent = 'Uploaded: ' + file.name;
+                        loadVideo();
+                        document.getElementById('calibrateUploadBtn').disabled = false;
+                        document.getElementById('resetUploadBtn').disabled = false;
+                        document.getElementById('videoControls').classList.add('active');
+                        alert('Video uploaded! Now click "Calibrate Lines" to mark the START and FINISH points where the athlete begins and ends the run.');
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                });
+        }
+        
+        function loadVideo() {
+            // Load the actual video file for playback - PAUSED at first frame
+            fetch('/get_video_path')
+                .then(r => r.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        videoElement.src = data.path;
+                        videoElement.style.display = 'block';
+                        videoElement.load();
+                        // Ensure video is paused and at the beginning
+                        videoElement.addEventListener('loadeddata', function() {
+                            videoElement.currentTime = 0;
+                            videoElement.pause();
+                        }, {once: true});
+                    }
+                });
+        }
+        
+        function pauseVideo() {
+            videoElement.pause();
+        }
+        
+        function playVideo() {
+            videoElement.play();
+        }
+        
+        function stepBackward() {
+            videoElement.currentTime = Math.max(0, videoElement.currentTime - 1);
+        }
+        
+        function stepForward() {
+            videoElement.currentTime = Math.min(videoElement.duration, videoElement.currentTime + 1);
+        }
+        
+        function analyzeVideo() {
+            if (startLine === null || finishLine === null) {
+                alert('Please calibrate first!');
+                return;
+            }
+            
+            document.getElementById('analyzeBtn').disabled = true;
+            document.getElementById('analyzeBtn').textContent = 'Analyzing...';
+            
+            fetch('/analyze_video', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({start_line: startLine, finish_line: finishLine})
+            })
+            .then(r => r.json())
+            .then(data => {
+                document.getElementById('analyzeBtn').textContent = 'Analyze Video';
+                if (data.status === 'success') {
+                    displayResults(data);
+                } else {
+                    alert('Error: ' + data.message);
+                    document.getElementById('analyzeBtn').disabled = false;
+                }
+            });
+        }
+        
+        function resetUpload() {
+            fetch('/reset_upload', {method: 'POST'});
+            
+            document.getElementById('videoUpload').value = '';
+            document.getElementById('fileName').textContent = '';
+            videoElement.pause();
+            videoElement.src = '';
+            videoElement.style.display = 'none';
+            document.getElementById('videoControls').classList.remove('active');
+            document.getElementById('calibrateUploadBtn').disabled = true;
+            document.getElementById('analyzeBtn').disabled = true;
+            document.getElementById('resetUploadBtn').disabled = true;
+            document.getElementById('timeResult').textContent = '--';
+            document.getElementById('speedResult').textContent = '--';
+            
+            resetCalibration();
+        }
+    </script>
+</body>
+</html>

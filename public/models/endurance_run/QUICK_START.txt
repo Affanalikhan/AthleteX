@@ -1,0 +1,66 @@
+================================================================================
+QUICK START GUIDE - Endurance Run Coach
+================================================================================
+
+WHAT IS THIS?
+An AI-powered running form analyzer that uses computer vision to analyze 
+running videos and provide coaching feedback.
+
+QUICK SETUP (5 MINUTES)
+================================================================================
+
+STEP 1: Install Backend
+------------------------
+cd backend
+pip install -r requirements.txt
+python main.py
+
+✓ Backend running on http://localhost:8000
+
+STEP 2: Install Frontend (in new terminal)
+-------------------------------------------
+cd frontend
+npm install
+npm start
+
+✓ Frontend running on http://localhost:3000
+
+STEP 3: Use the App
+-------------------
+1. Open http://localhost:3000 in your browser
+2. Upload a running video (side view, 8-15 seconds)
+3. Click "Analyze Run"
+4. View your results and coaching tips!
+
+SUPPORTED VIDEO FORMATS
+================================================================================
+- MP4, MOV, AVI
+- Maximum size: 50MB
+- Recommended: 8-15 seconds, side view, good lighting
+
+WHAT YOU'LL GET
+================================================================================
+✓ Cadence (steps per minute)
+✓ Ground contact time
+✓ Stride symmetry
+✓ Overall efficiency score
+✓ Personalized coaching feedback
+✓ Recommended training drills
+
+TROUBLESHOOTING
+================================================================================
+Backend won't start?
+→ Make sure Python 3.8+ is installed
+→ Run: pip install -r backend/requirements.txt
+
+Frontend won't start?
+→ Make sure Node.js 14+ is installed
+→ Delete node_modules folder and run: npm install
+
+Can't upload video?
+→ Check file size (max 50MB)
+→ Convert to MP4 format if needed
+
+For detailed instructions, see DEPLOYMENT_GUIDE.txt
+
+================================================================================

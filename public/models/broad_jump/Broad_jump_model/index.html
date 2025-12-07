@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Broad Jump Test System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>🏃 Professional Broad Jump Test System</h1>
+            <p class="subtitle">AI-Powered Distance Measurement</p>
+        </header>
+
+        <!-- Instructions Screen -->
+        <div id="instructionsScreen" class="screen active">
+            <div class="card">
+                <h2>📋 Setup Instructions</h2>
+                
+                <div class="instruction-section">
+                    <h3>🎥 Camera Setup</h3>
+                    <ul>
+                        <li>Position camera to the <strong>SIDE</strong> (not front)</li>
+                        <li>Camera should see the full jump area (3+ meters)</li>
+                        <li>Mount at waist height</li>
+                        <li>Keep camera stable (use tripod if possible)</li>
+                    </ul>
+                </div>
+
+                <div class="instruction-section">
+                    <h3>📐 Calibration</h3>
+                    <ul>
+                        <li>Stand in front of camera in full view</li>
+                        <li>Enter your height (used for scale calculation)</li>
+                        <li>System will automatically calibrate</li>
+                    </ul>
+                </div>
+
+                <div class="instruction-section">
+                    <h3>🚶 Your Position</h3>
+                    <ul>
+                        <li>Stand <strong>SIDEWAYS</strong> to the camera</li>
+                        <li>Face perpendicular to camera view</li>
+                        <li>Feet together at starting position</li>
+                        <li>Jump <strong>FORWARD</strong> (away from camera)</li>
+                    </ul>
+                </div>
+
+                <div class="camera-diagram">
+                    <pre>
+    📷 Camera (Side View)
+    ↓
+    ┌─────────────────────────────┐
+    │                             │
+    │  🚶 ═══════► 🏃            │
+    │  You      Jump forward      │
+    │  (sideways)                 │
+    │                             │
+    └─────────────────────────────┘
+                    </pre>
+                </div>
+
+                <button class="btn btn-primary btn-large" onclick="startCalibration()">
+                    Start Calibration
+                </button>
+            </div>
+        </div>
+
+        <!-- Calibration Screen -->
+        <div id="calibrationScreen" class="screen">
+            <div class="card">
+                <h2>📏 Automatic Calibration</h2>
+                <p class="info-text">Stand in full view and enter your height</p>
+                
+                <div class="input-group">
+                    <label for="userHeight">Enter your height:</label>
+                    <div style="display: flex; justify-content: center; gap: 10px; align-items: center;">
+                        <input type="number" id="userHeight" step="1" value="170" min="100" max="250">
+                        <select id="heightUnit" style="padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1.1rem;">
+                            <option value="cm">cm</option>
+                            <option value="m">meters</option>
+                            <option value="ft">feet</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="video-container">
+                    <video id="calibrationVideo" autoplay playsinline></video>
+                    <canvas id="calibrationCanvas"></canvas>
+                    <div id="calibrationOverlay" class="overlay">
+                        <div class="overlay-text">
+                            <span id="calibrationStatus">Stand in full view</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="calibration-info">
+                    <div class="info-box">
+                        <span class="label">Detection:</span>
+                        <span id="detectionCount" class="value">Waiting...</span>
+                    </div>
+                    <div class="info-box">
+                        <span class="label">Scale:</span>
+                        <span id="pixelDistance" class="value">-</span>
+                    </div>
+                </div>
+
+                <button class="btn btn-success btn-large" onclick="startAutoCalibration()">
+                    Start Calibration
+                </button>
+            </div>
+        </div>
+
+        <!-- Trial Screen -->
+        <div id="trialScreen" class="screen">
+            <div class="card">
+                <div class="trial-header">
+                    <h2>Trial <span id="currentTrial">1</span>/3</h2>
+                    <div class="trial-status">
+                        <span id="trialStatus" class="status-badge">Ready</span>
+                    </div>
+                </div>
+
+                <div class="video-container">
+                    <video id="trialVideo" autoplay playsinline></video>
+                    <canvas id="trialCanvas"></canvas>
+                    <div id="trialOverlay" class="overlay">
+                        <div id="countdownDisplay" class="countdown-display"></div>
+                        <div id="statusDisplay" class="status-display"></div>
+                    </div>
+                </div>
+
+                <div class="trial-controls">
+                    <button id="startTrialBtn" class="btn btn-primary btn-large" onclick="startTrial()">
+                        Press SPACE to Start
+                    </button>
+                    <button class="btn btn-secondary" onclick="skipTrial()">Skip Trial</button>
+                </div>
+
+                <div class="trial-info">
+                    <div class="info-box">
+                        <span class="label">Calibration:</span>
+                        <span id="calibrationInfo" class="value">-</span>
+                    </div>
+                    <div class="info-box">
+                        <span class="label">Status:</span>
+                        <span id="detectionStatus" class="value">Waiting</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="resultsScreen" class="screen">
+            <div class="card">
+                <h2>🎉 Test Complete - Final Results</h2>
+                
+                <div class="results-summary">
+                    <div class="result-card best-result">
+                        <div class="result-label">Best Jump</div>
+                        <div class="result-value" id="bestJump">-</div>
+                        <div class="result-unit">meters</div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <div class="result-label">Average</div>
+                        <div class="result-value" id="avgJump">-</div>
+                        <div class="result-unit">meters</div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <div class="result-label">Valid Trials</div>
+                        <div class="result-value" id="validTrials">-</div>
+                        <div class="result-unit">/ 3</div>
+                    </div>
+                </div>
+
+                <div class="individual-results">
+                    <h3>Individual Results</h3>
+                    <table class="results-table">
+                        <thead>
+                            <tr>
+                                <th>Trial</th>
+                                <th>Distance</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsTableBody">
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="results-actions">
+                    <button class="btn btn-primary" onclick="downloadResults()">
+                        📥 Download Results (CSV)
+                    </button>
+                    <button class="btn btn-secondary" onclick="restartTest()">
+                        🔄 New Test
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <p>Loading AI Model...</p>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection"></script>
+    <script src="app.js"></script>
+</body>
+</html>

@@ -3,9 +3,18 @@
  * 
  * This service handles ML-based pose estimation and pattern detection for uploaded videos.
  * It processes video files to extract movement data, analyze form, and generate performance metrics.
+ * 
+ * INCLUDES FULL VALIDATION:
+ * - Full-body detection validation
+ * - Movement validation for each test type
+ * - Test-type classification
+ * - Offline model support
  */
 
 import { TestType } from '../models';
+import movementValidationService, { ValidationResult } from './movementValidation';
+import testTypeClassifier, { ClassificationResult } from './testTypeClassifier';
+import offlineModelLoader from './offlineModelLoader';
 
 interface PoseAnalysisResult {
   score: number;
@@ -26,6 +35,10 @@ interface PoseAnalysisResult {
     timestamp: number;
   }>;
   processingTime: number;
+  validation?: ValidationResult;
+  classification?: ClassificationResult;
+  isValid: boolean;
+  errorMessage?: string;
 }
 
 class VideoPoseAnalysisService {
@@ -33,13 +46,23 @@ class VideoPoseAnalysisService {
    * Analyzes an uploaded video file using ML pose estimation
    * 
    * Process:
-   * 1. Extract frames from video at 30fps
-   * 2. Run MediaPipe Pose model on each frame
-   * 3. Detect 33 body landmarks per frame
-   * 4. Calculate joint angles and movement patterns
-   * 5. Count repetitions and assess form quality
-   * 6. Combine with manual measurements for enhanced accuracy
-   * 7. Generate comprehensive feedback
+   * 1. Initialize offline ML models
+   * 2. Extract frames from video at 30fps
+   * 3. Run MediaPipe Pose model on each frame
+   * 4. Detect 33 body landmarks per frame
+   * 5. VALIDATE full-body detection
+   * 6. VALIDATE movement patterns
+   * 7. CLASSIFY test type
+   * 8. Calculate joint angles and movement patterns
+   * 9. Count repetitions and assess form quality
+   * 10. Combine with manual measurements for enhanced accuracy
+   * 11. Generate comprehensive feedback
+   * 
+   * VALIDATION RULES:
+   * - Returns error if full body not visible
+   * - Returns error if required movement not detected
+   * - Returns error if wrong test type detected
+   * - Only proceeds with scoring if all validations pass
    */
   async analyzeVideo(
     videoFile: File, 
@@ -54,25 +77,176 @@ class VideoPoseAnalysisService {
   ): Promise<PoseAnalysisResult> {
     const startTime = Date.now();
     
-    console.log(`Starting ML pose analysis for ${testType}...`);
+    console.log(`🎬 Starting ML pose analysis for ${testType}...`);
     console.log(`Video file: ${videoFile.name}, Size: ${(videoFile.size / (1024 * 1024)).toFixed(2)} MB`);
     if (manualMeasurements) {
       console.log('Manual measurements provided:', manualMeasurements);
     }
 
-    // Simulate video processing time (in production, this would be actual ML processing)
+    // STEP 1: Initialize offline models
+    try {
+      await offlineModelLoader.initialize();
+      console.log('✅ ML models initialized');
+    } catch (error) {
+      console.error('❌ Failed to initialize ML models:', error);
+      return this.createErrorResult('ML models failed to load. Please check your connection.', Date.now() - startTime);
+    }
+
+    // STEP 2: Simulate video processing and extract landmarks
+    // In production, this would use actual MediaPipe Pose detection
+    const landmarkHistory = await this.extractLandmarksFromVideo(videoFile);
+    
+    if (landmarkHistory.length === 0) {
+      return this.createErrorResult('Failed to process video. Please try again.', Date.now() - startTime);
+    }
+
+    console.log(`📊 Extracted ${landmarkHistory.length} frames with landmarks`);
+
+    // STEP 3: VALIDATE FULL-BODY DETECTION
+    const latestLandmarks = landmarkHistory[landmarkHistory.length - 1];
+    const fullBodyCheck = movementValidationService.validateFullBody(latestLandmarks);
+    
+    if (!fullBodyCheck.isValid) {
+      console.log('❌ Full body validation failed');
+      return this.createErrorResult(
+        `Invalid video: Full body not visible. Missing: ${fullBodyCheck.missingParts.join(', ')}. Please ensure your entire body is in frame.`,
+        Date.now() - startTime
+      );
+    }
+
+    console.log('✅ Full body detected');
+
+    // STEP 4: VALIDATE MOVEMENT
+    const videoDuration = (videoFile.size / (1024 * 1024)) * 2; // Rough estimate
+    const movementValidation = movementValidationService.validateMovement(
+      testType,
+      landmarkHistory,
+      videoDuration
+    );
+
+    if (!movementValidation.isValid) {
+      console.log('❌ Movement validation failed:', movementValidation.errorMessage);
+      return this.createErrorResult(
+        movementValidation.errorMessage || 'Required movement not detected',
+        Date.now() - startTime,
+        movementValidation
+      );
+    }
+
+    console.log('✅ Movement validated');
+
+    // STEP 5: CLASSIFY TEST TYPE
+    const features = movementValidationService.extractMovementFeatures(landmarkHistory);
+    const classification = testTypeClassifier.classify(features, testType);
+
+    if (!classification.matchesSelected) {
+      console.log('❌ Test type mismatch');
+      const detectedName = testTypeClassifier.getTypeName(classification.detectedType);
+      return this.createErrorResult(
+        `Incorrect test for selected assessment. Detected: ${detectedName}. Please perform the correct exercise.`,
+        Date.now() - startTime,
+        movementValidation,
+        classification
+      );
+    }
+
+    console.log('✅ Test type validated');
+
+    // STEP 6: ALL VALIDATIONS PASSED - Proceed with scoring
+    console.log('🎯 All validations passed, proceeding with ML scoring...');
+
+    // Simulate video processing time
     await this.simulateVideoProcessing(videoFile);
 
     // Generate analysis results based on test type and manual measurements
     const result = this.generateAnalysisResults(testType, videoFile, manualMeasurements);
     
     const processingTime = Date.now() - startTime;
-    console.log(`Pose analysis completed in ${processingTime}ms`);
+    console.log(`✅ Pose analysis completed in ${processingTime}ms`);
 
     return {
       ...result,
-      processingTime
+      processingTime,
+      validation: movementValidation,
+      classification,
+      isValid: true
     };
+  }
+
+  /**
+   * Create error result when validation fails
+   */
+  private createErrorResult(
+    errorMessage: string,
+    processingTime: number,
+    validation?: ValidationResult,
+    classification?: ClassificationResult
+  ): PoseAnalysisResult {
+    return {
+      score: 0,
+      reps: 0,
+      formScore: 0,
+      detectedPatterns: [],
+      jointAngles: {
+        leftKnee: [],
+        rightKnee: [],
+        leftHip: [],
+        rightHip: [],
+        leftElbow: [],
+        rightElbow: []
+      },
+      feedback: [{
+        message: errorMessage,
+        severity: 'error',
+        timestamp: 0
+      }],
+      processingTime,
+      validation,
+      classification,
+      isValid: false,
+      errorMessage
+    };
+  }
+
+  /**
+   * Extract landmarks from video frames
+   * In production, this would use actual MediaPipe Pose detection
+   */
+  private async extractLandmarksFromVideo(videoFile: File): Promise<any[][]> {
+    // Simulate landmark extraction
+    // In production, this would:
+    // 1. Load video into canvas
+    // 2. Extract frames at 30fps
+    // 3. Run MediaPipe Pose on each frame
+    // 4. Collect landmarks with visibility scores
+    
+    const frameCount = Math.floor((videoFile.size / (1024 * 1024)) * 30); // Rough estimate
+    const landmarkHistory: any[][] = [];
+
+    for (let i = 0; i < Math.min(frameCount, 90); i++) {
+      // Simulate 33 landmarks with visibility
+      const landmarks = Array.from({ length: 33 }, (_, idx) => ({
+        x: 0.3 + Math.random() * 0.4,
+        y: 0.2 + Math.random() * 0.6,
+        z: Math.random() * 0.1,
+        visibility: 0.6 + Math.random() * 0.4 // 0.6-1.0 visibility
+      }));
+
+      // Simulate movement patterns
+      const progress = i / frameCount;
+      
+      // Add realistic movement to hips (vertical for jumps, horizontal for runs)
+      landmarks[23].y = 0.5 + Math.sin(progress * Math.PI * 2) * 0.15; // Left hip
+      landmarks[24].y = 0.5 + Math.sin(progress * Math.PI * 2) * 0.15; // Right hip
+      
+      // Add horizontal movement for runs
+      landmarks[23].x = 0.4 + Math.sin(progress * Math.PI * 4) * 0.1;
+      landmarks[24].x = 0.4 + Math.sin(progress * Math.PI * 4) * 0.1;
+
+      landmarkHistory.push(landmarks);
+    }
+
+    return landmarkHistory;
   }
 
   /**

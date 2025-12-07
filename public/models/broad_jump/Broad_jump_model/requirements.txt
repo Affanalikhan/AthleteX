@@ -1,0 +1,14 @@
+# Broad Jump Distance Measurement System
+# Minimal requirements - models are loaded from CDN
+
+# For Python server (optional - can use any HTTP server)
+# No heavy dependencies needed!
+
+# If you want to run the Python server:
+# python -m http.server 8000
+
+# All AI models are loaded from CDN:
+# - TensorFlow.js (loaded from CDN)
+# - MoveNet Pose Detection (loaded from CDN)
+
+# No local model files needed!

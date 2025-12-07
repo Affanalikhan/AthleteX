@@ -1,0 +1,14 @@
+train: train/images
+val: valid/images
+test: test/images
+path: data/med_ball
+
+nc: 2
+names: ['Athelete', 'Medicine Ball']
+
+roboflow:
+  workspace: medball
+  project: med_ball
+  version: 1
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/medball/med_ball/dataset/1

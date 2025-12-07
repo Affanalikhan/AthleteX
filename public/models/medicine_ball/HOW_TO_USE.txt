@@ -1,0 +1,112 @@
+MEDICINE BALL POWER COACH - QUICK START GUIDE
+==============================================
+
+STEP 1: TRAIN THE MODEL (For Maximum Accuracy)
+-----------------------------------------------
+Run this command to train on your Roboflow dataset:
+
+    python train_for_accuracy.py
+
+This will:
+- Use your 207 images (145 train / 41 val / 21 test)
+- Train for 300 epochs with early stopping
+- Apply heavy data augmentation
+- Save best model automatically
+
+Training time:
+- CPU: 8-12 hours
+- GPU: 2-4 hours
+
+You can stop anytime with Ctrl+C - progress is saved!
+
+
+STEP 2: ANALYZE YOUR VIDEO
+---------------------------
+After training (or use pretrained models), analyze any video:
+
+    python analyze_video.py your_video.mp4
+
+Supported formats: MP4, MOV, AVI
+Max size: Any size (no limit)
+
+
+WHAT YOU GET:
+-------------
+📊 SCORES (0-10 or 0-100):
+  - Power Score
+  - Technique Quality
+  - Explosiveness
+  - Symmetry
+  - Safety/Control
+  - Release Velocity
+
+📐 KEY ANGLES:
+  - Max Knee Flexion
+  - Max Hip Flexion
+  - Trunk Angle
+
+✅ STRENGTHS:
+  - What you're doing well
+
+💡 IMPROVEMENTS:
+  - Specific areas to work on
+
+🏋️ EXERCISES:
+  - Recommended drills
+
+
+EXAMPLE USAGE:
+--------------
+# Train model first (one time)
+python train_for_accuracy.py
+
+# Then analyze videos
+python analyze_video.py throw1.mp4
+python analyze_video.py throw2.mp4
+python analyze_video.py throw3.mp4
+
+
+TIPS FOR BEST RESULTS:
+----------------------
+1. Record from side or 45° angle
+2. Show full body in frame
+3. Keep ball visible throughout
+4. Good lighting
+5. Stable camera (tripod recommended)
+6. 5-10 second videos work best
+
+
+DATASET INFO:
+-------------
+Your current dataset:
+- 207 total images
+- 2 classes: Athlete, Medicine Ball
+- Source: Roboflow
+- Format: YOLOv8
+
+To improve accuracy:
+- Add more training videos
+- Record in different conditions
+- Upload to Roboflow
+- Retrain model
+
+
+TROUBLESHOOTING:
+----------------
+Q: Video won't open?
+A: Check file format (MP4, MOV, AVI) and path
+
+Q: Low scores?
+A: Train custom model with your data first
+
+Q: Slow processing?
+A: Normal on CPU, use GPU for faster analysis
+
+Q: Want better accuracy?
+A: Add more training data and retrain
+
+
+CONTACT:
+--------
+Check DATASET_INFO.md for dataset details
+Check POWER_COACH_UPDATE_PLAN.md for system architecture

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Broad Jump Test System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            width: 100%;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 48px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 20px;
+            opacity: 0.9;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .option-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+        
+        .option-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+        }
+        
+        .option-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+        
+        .option-card h2 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+        
+        .option-card p {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .option-card ul {
+            text-align: left;
+            color: #555;
+            margin-bottom: 25px;
+            padding-left: 20px;
+        }
+        
+        .option-card li {
+            margin: 8px 0;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+        
+        .info-section {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+        
+        .info-section h3 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+        
+        .info-section p {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 10px;
+        }
+        
+        .camera-diagram {
+            background: #f5f5f5;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 36px;
+            }
+            
+            .options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏃 Broad Jump Test System</h1>
+            <p>AI-Powered Jump Distance Measurement</p>
+        </div>
+        
+        <div class="options">
+            <div class="option-card" onclick="window.location.href='simple_jump_test.html'">
+                <div class="option-icon">📹</div>
+                <h2>Live Camera Test</h2>
+                <p>Test in real-time with your webcam</p>
+                <ul>
+                    <li>✅ Real-time detection</li>
+                    <li>✅ Voice countdown</li>
+                    <li>✅ 3 trials</li>
+                    <li>✅ Instant results</li>
+                    <li>✅ No calibration needed</li>
+                </ul>
+                <a href="simple_jump_test.html" class="btn">Start Live Test</a>
+            </div>
+            
+            <div class="option-card" onclick="window.location.href='video_upload_jump.html'">
+                <div class="option-icon">📁</div>
+                <h2>Video Upload Analysis</h2>
+                <p>Analyze pre-recorded jump videos</p>
+                <ul>
+                    <li>✅ Upload any video</li>
+                    <li>✅ Accurate calibration</li>
+                    <li>✅ Detailed analysis</li>
+                    <li>✅ Visual trajectory</li>
+                    <li>✅ Frame-by-frame tracking</li>
+                </ul>
+                <a href="video_upload_jump.html" class="btn">Upload Video</a>
+            </div>
+        </div>
+        
+        <div class="info-section">
+            <h3>📐 Important: Camera Setup</h3>
+            <p><strong>For accurate measurements, the camera MUST be positioned correctly:</strong></p>
+            
+            <div class="camera-diagram">    📷 Camera (Side View)
+    ↓
+    ┌─────────────────────────────────────┐
+    │                                     │
+    │  🚶 ═══════════► 🏃                │
+    │  Person       Jump forward          │
+    │  (sideways)                         │
+    │                                     │
+    └─────────────────────────────────────┘</div>
+            
+            <p><strong>Key Requirements:</strong></p>
+            <ul style="padding-left: 20px; color: #555;">
+                <li>✅ Camera positioned to the SIDE (not front)</li>
+                <li>✅ Person stands SIDEWAYS to camera</li>
+                <li>✅ Jump FORWARD (perpendicular to camera)</li>
+                <li>✅ Camera is STABLE (no movement)</li>
+                <li>✅ Good lighting</li>
+                <li>✅ Full jump area visible</li>
+            </ul>
+            
+            <h3 style="margin-top: 25px;">📊 Camera Distance Range</h3>
+            <p><strong>Recommended distance: 3-4 meters</strong></p>
+            <ul style="padding-left: 20px; color: #555;">
+                <li><strong>Minimum:</strong> 2.5 meters (for shorter jumps)</li>
+                <li><strong>Optimal:</strong> 3-4 meters (best view angle)</li>
+                <li><strong>Maximum:</strong> 5 meters (may reduce accuracy)</li>
+            </ul>
+            <p style="margin-top: 10px;">The camera should be far enough to capture the entire jump but close enough for clear detection.</p>
+            
+            <h3 style="margin-top: 25px;">🎯 Which Option to Choose?</h3>
+            <p><strong>Live Camera Test:</strong> Best for immediate testing, quick results, and when you have a webcam available.</p>
+            <p><strong>Video Upload:</strong> Best for analyzing recorded jumps, remote testing, or when you need precise calibration with reference objects.</p>
+        </div>
+    </div>
+</body>
+</html>

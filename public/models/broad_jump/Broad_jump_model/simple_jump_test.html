@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Broad Jump Test - Auto Distance</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .video-container {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto 20px;
+            background: #000;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        video {
+            width: 100%;
+            display: block;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            padding: 20px 40px;
+            border-radius: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            min-width: 400px;
+        }
+
+        .countdown {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 10rem;
+            font-weight: bold;
+            color: #ff4444;
+            text-shadow: 0 0 30px rgba(255,68,68,0.8);
+        }
+
+        .countdown.start {
+            color: #4CAF50;
+            text-shadow: 0 0 30px rgba(76,175,80,0.8);
+        }
+
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 0 10px;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-primary {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #666;
+            color: white;
+        }
+
+        .info-panel {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px auto;
+            max-width: 800px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            font-size: 1.2rem;
+        }
+
+        .results {
+            background: rgba(255,255,255,0.95);
+            color: #333;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px auto;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .result-value {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #4CAF50;
+            margin: 20px 0;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 1.5rem;
+        }
+
+        .instructions {
+            background: rgba(255,255,255,0.95);
+            color: #333;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px auto;
+            max-width: 800px;
+        }
+
+        .instructions h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .instructions ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .instructions li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .instructions li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4CAF50;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏃 Broad Jump Distance Test</h1>
+
+        <!-- Instructions -->
+        <div id="instructionsPanel" class="instructions">
+            <h2>📋 Instructions</h2>
+            <ul>
+                <li><strong>Camera Setup:</strong> Position camera to the SIDE (not front)</li>
+                <li><strong>Your Position:</strong> Stand SIDEWAYS to camera</li>
+                <li><strong>Jump Direction:</strong> Jump FORWARD (perpendicular to camera)</li>
+                <li><strong>Controls:</strong> Press SPACE or click "Start Trial" button</li>
+                <li><strong>Trials:</strong> You get 3 attempts</li>
+            </ul>
+            
+            <div style="background: #fff3e0; padding: 20px; border-radius: 10px; margin-top: 20px; border-left: 4px solid #ff9800;">
+                <h2 style="color: #e65100; margin-bottom: 15px;">📌 Broad Jump (Standing Long Jump) – Official Rules</h2>
+                
+                <h3 style="color: #e65100; margin-top: 15px; font-size: 1.1rem;">1️⃣ Starting Position</h3>
+                <ul style="list-style: disc; padding-left: 40px;">
+                    <li>The athlete must stand behind the take-off line</li>
+                    <li>Feet should be parallel and shoulder-width apart</li>
+                    <li>No running or taking steps before the jump — it must be a standing start</li>
+                    <li>A slight rocking motion is allowed (back and forth), but feet must not leave the ground before the jump</li>
+                </ul>
+                
+                <h3 style="color: #e65100; margin-top: 15px; font-size: 1.1rem;">2️⃣ Take-Off Rules</h3>
+                <ul style="list-style: disc; padding-left: 40px;">
+                    <li>The jump is performed using both legs together</li>
+                    <li>The athlete must push off with both feet simultaneously</li>
+                </ul>
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn btn-primary" onclick="startSystem()">Start Test</button>
+            </div>
+        </div>
+
+        <!-- Loading -->
+        <div id="loadingPanel" class="loading hidden">
+            <p>Loading AI Model...</p>
+            <p>Please wait...</p>
+        </div>
+
+        <!-- Video Panel -->
+        <div id="videoPanel" class="hidden">
+            <div class="video-container">
+                <video id="video" autoplay playsinline></video>
+                <canvas id="canvas"></canvas>
+                <div id="overlay" class="overlay"></div>
+                <div id="countdown" class="countdown"></div>
+            </div>
+
+            <div class="info-panel">
+                <div class="info-row">
+                    <span>Trial:</span>
+                    <span id="trialNum">1 / 3</span>
+                </div>
+                <div class="info-row">
+                    <span>Status:</span>
+                    <span id="status">Ready</span>
+                </div>
+                <div class="info-row">
+                    <span>Distance:</span>
+                    <span id="distance">-</span>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button id="startBtn" class="btn btn-primary" onclick="startTrial()">
+                    Press SPACE to Start Trial
+                </button>
+                <button class="btn btn-secondary" onclick="skipTrial()">Skip Trial</button>
+            </div>
+        </div>
+
+        <!-- Results Panel -->
+        <div id="resultsPanel" class="results hidden">
+            <h2>🎉 Test Complete!</h2>
+            <div class="result-value" id="bestResult">-</div>
+            <p style="font-size: 1.2rem; margin: 20px 0;">
+                Trial 1: <span id="result1">-</span><br>
+                Trial 2: <span id="result2">-</span><br>
+                Trial 3: <span id="result3">-</span>
+            </p>
+            <button class="btn btn-primary" onclick="location.reload()">New Test</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection"></script>
+    <script>
+        let detector = null;
+        let videoStream = null;
+        let currentTrial = 1;
+        let trialResults = [];
+        let isRunning = false;
+
+        // Voice synthesis
+        function speak(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 1.0;
+            utterance.pitch = 1.0;
+            utterance.volume = 1.0;
+            speechSynthesis.speak(utterance);
+            console.log('🔊', text);
+        }
+
+        // Start system
+        async function startSystem() {
+            document.getElementById('instructionsPanel').classList.add('hidden');
+            document.getElementById('loadingPanel').classList.remove('hidden');
+            
+            speak('Loading system. Please wait.');
+            
+            try {
+                // Load model
+                const model = poseDetection.SupportedModels.MoveNet;
+                detector = await poseDetection.createDetector(model, {
+                    modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING
+                });
+                
+                // Start camera
+                videoStream = await navigator.mediaDevices.getUserMedia({
+                    video: { width: 1280, height: 720, facingMode: 'environment' }
+                });
+                
+                const video = document.getElementById('video');
+                video.srcObject = videoStream;
+                
+                video.onloadedmetadata = () => {
+                    const canvas = document.getElementById('canvas');
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    
+                    document.getElementById('loadingPanel').classList.add('hidden');
+                    document.getElementById('videoPanel').classList.remove('hidden');
+                    
+                    speak('System ready. Press space to start trial 1.');
+                };
+                
+                // Keyboard control
+                document.addEventListener('keydown', (e) => {
+                    if (e.code === 'Space' && !isRunning) {
+                        e.preventDefault();
+                        startTrial();
+                    }
+                });
+                
+            } catch (error) {
+                alert('Error: ' + error.message);
+                console.error(error);
+            }
+        }
+
+        // Start trial
+        async function startTrial() {
+            if (isRunning) return;
+            isRunning = true;
+            
+            document.getElementById('startBtn').disabled = true;
+            document.getElementById('status').textContent = 'Running...';
+            
+            speak(`Trial ${currentTrial}. Stand in position.`);
+            
+            // Detect start position
+            const startPos = await detectStartPosition();
+            if (!startPos) {
+                speak('Could not detect position. Try again.');
+                resetTrial();
+                return;
+            }
+            
+            // Countdown
+            await countdown();
+            
+            // Track jump
+            const result = await trackJump(startPos);
+            
+            if (result) {
+                trialResults.push(result);
+                speak(`You jumped ${result.toFixed(2)} meters.`);
+                document.getElementById(`result${currentTrial}`).textContent = `${result.toFixed(2)}m`;
+                
+                if (currentTrial < 3) {
+                    currentTrial++;
+                    document.getElementById('trialNum').textContent = `${currentTrial} / 3`;
+                    resetTrial();
+                    speak('Press space for next trial.');
+                } else {
+                    showResults();
+                }
+            } else {
+                speak('Jump not detected. Try again.');
+                resetTrial();
+            }
+        }
+
+        // Detect start position
+        function detectStartPosition() {
+            return new Promise(async (resolve) => {
+                document.getElementById('overlay').textContent = 'Stand still...';
+                
+                let staticCount = 0;
+                let prevX = null;
+                const timeout = setTimeout(() => resolve(null), 10000);
+                
+                const detect = async () => {
+                    const video = document.getElementById('video');
+                    const poses = await detector.estimatePoses(video);
+                    
+                    if (poses.length > 0) {
+                        const ankles = getAnkles(poses[0]);
+                        if (ankles) {
+                            const x = Math.max(ankles.left.x, ankles.right.x);
+                            
+                            if (prevX && Math.abs(x - prevX) < 10) {
+                                staticCount++;
+                            } else {
+                                staticCount = 0;
+                            }
+                            
+                            prevX = x;
+                            document.getElementById('overlay').textContent = `Hold still: ${staticCount}/5`;
+                            
+                            if (staticCount >= 5) {
+                                clearTimeout(timeout);
+                                resolve(x);
+                                return;
+                            }
+                        }
+                    }
+                    
+                    requestAnimationFrame(detect);
+                };
+                
+                detect();
+            });
+        }
+
+        // Countdown
+        function countdown() {
+            return new Promise((resolve) => {
+                const countdownEl = document.getElementById('countdown');
+                const overlayEl = document.getElementById('overlay');
+                overlayEl.style.display = 'none';
+                
+                const counts = ['READY', '3', '2', '1', 'START!'];
+                let i = 0;
+                
+                const show = () => {
+                    if (i >= counts.length) {
+                        countdownEl.textContent = '';
+                        overlayEl.style.display = 'block';
+                        resolve();
+                        return;
+                    }
+                    
+                    const text = counts[i];
+                    countdownEl.textContent = text;
+                    if (text === 'START!') countdownEl.classList.add('start');
+                    else countdownEl.classList.remove('start');
+                    
+                    speak(text);
+                    i++;
+                    setTimeout(show, text === 'READY' ? 500 : 800);
+                };
+                
+                show();
+            });
+        }
+
+        // Track jump
+        function trackJump(startX) {
+            return new Promise(async (resolve) => {
+                document.getElementById('overlay').textContent = 'JUMP NOW!';
+                
+                let positions = [];
+                let maxX = startX;
+                let tookOff = false;
+                let stable = 0;
+                const startTime = Date.now();
+                
+                const track = async () => {
+                    if (Date.now() - startTime > 10000) {
+                        resolve(null);
+                        return;
+                    }
+                    
+                    const video = document.getElementById('video');
+                    const canvas = document.getElementById('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    
+                    const poses = await detector.estimatePoses(video);
+                    
+                    if (poses.length > 0) {
+                        const ankles = getAnkles(poses[0]);
+                        if (ankles) {
+                            const x = Math.max(ankles.left.x, ankles.right.x);
+                            positions.push(x);
+                            
+                            if (x > maxX) maxX = x;
+                            
+                            // Draw tracking
+                            ctx.fillStyle = '#4CAF50';
+                            ctx.beginPath();
+                            ctx.arc(x, ankles.left.y, 15, 0, 2 * Math.PI);
+                            ctx.fill();
+                            
+                            // Detect takeoff and landing
+                            if (positions.length > 2) {
+                                const vel = x - positions[positions.length - 2];
+                                
+                                if (!tookOff && Math.abs(vel) > 20) {
+                                    tookOff = true;
+                                    document.getElementById('overlay').textContent = 'Tracking...';
+                                }
+                                
+                                if (tookOff && Math.abs(vel) < 5) {
+                                    stable++;
+                                    if (stable >= 4) {
+                                        // Calculate distance (using body height as reference)
+                                        // Average person height ~1.7m, body in pixels ~400px
+                                        // So 1 meter ≈ 235 pixels (approximate)
+                                        const pixelDistance = maxX - startX;
+                                        const meters = pixelDistance / 235; // Approximate conversion
+                                        
+                                        document.getElementById('distance').textContent = `${meters.toFixed(2)}m`;
+                                        resolve(meters);
+                                        return;
+                                    }
+                                } else {
+                                    stable = 0;
+                                }
+                            }
+                        }
+                    }
+                    
+                    requestAnimationFrame(track);
+                };
+                
+                track();
+            });
+        }
+
+        // Get ankles
+        function getAnkles(pose) {
+            const kp = pose.keypoints;
+            const left = kp[15];
+            const right = kp[16];
+            
+            if (left.score > 0.3 && right.score > 0.3) {
+                return { left, right };
+            }
+            return null;
+        }
+
+        // Reset trial
+        function resetTrial() {
+            isRunning = false;
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('status').textContent = 'Ready';
+            document.getElementById('overlay').textContent = '';
+            
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // Skip trial
+        function skipTrial() {
+            if (currentTrial < 3) {
+                trialResults.push(null);
+                document.getElementById(`result${currentTrial}`).textContent = 'Skipped';
+                currentTrial++;
+                document.getElementById('trialNum').textContent = `${currentTrial} / 3`;
+                resetTrial();
+            } else {
+                showResults();
+            }
+        }
+
+        // Show results
+        function showResults() {
+            if (videoStream) {
+                videoStream.getTracks().forEach(track => track.stop());
+            }
+            
+            document.getElementById('videoPanel').classList.add('hidden');
+            document.getElementById('resultsPanel').classList.remove('hidden');
+            
+            const valid = trialResults.filter(r => r !== null);
+            if (valid.length > 0) {
+                const best = Math.max(...valid);
+                document.getElementById('bestResult').textContent = `Best: ${best.toFixed(2)} meters`;
+                speak(`Test complete. Your best jump was ${best.toFixed(2)} meters.`);
+            } else {
+                document.getElementById('bestResult').textContent = 'No valid jumps';
+                speak('Test complete. No valid jumps recorded.');
+            }
+        }
+    </script>
+</body>
+</html>

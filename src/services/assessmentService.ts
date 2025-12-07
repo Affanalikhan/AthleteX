@@ -73,7 +73,7 @@ class AssessmentService {
       console.error('⚠️ ML initialization failed, continuing with fallback:', error);
     }
 
-    // STEP 2: Process video with MediaPipe for pose detection
+    // STEP 2: Process video with MediaPipe for pose detection AND VALIDATION
     let poseData: any[] = [];
     let videoAnalysisResult: any;
     try {
@@ -82,9 +82,18 @@ class AssessmentService {
         testType, 
         manualMeasurements
       );
-      console.log('✅ Video pose analysis completed');
+      
+      // CHECK IF VALIDATION FAILED
+      if (!videoAnalysisResult.isValid) {
+        console.log('❌ Video validation failed:', videoAnalysisResult.errorMessage);
+        throw new Error(videoAnalysisResult.errorMessage || 'Video validation failed');
+      }
+      
+      console.log('✅ Video pose analysis and validation completed');
     } catch (error) {
       console.error('⚠️ Video analysis failed:', error);
+      // Return error to user - DO NOT proceed with scoring
+      throw error;
     }
 
     // STEP 3: Run ML Model prediction
