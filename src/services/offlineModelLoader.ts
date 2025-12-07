@@ -249,10 +249,10 @@ class OfflineModelLoader {
    * Unload all models
    */
   unloadAllModels(): void {
-    for (const [modelName, model] of this.models.entries()) {
+    this.models.forEach((model, modelName) => {
       model.dispose();
       console.log(`🗑️ Unloaded model: ${modelName}`);
-    }
+    });
     
     this.models.clear();
     this.modelStatus.clear();

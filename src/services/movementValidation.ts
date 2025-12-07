@@ -276,7 +276,7 @@ class MovementValidationService {
     console.log('📊 Movement features:', features);
 
     // Step 3: Validate movement based on test type
-    const threshold = MOVEMENT_THRESHOLDS[testType];
+    const threshold = MOVEMENT_THRESHOLDS[testType as keyof typeof MOVEMENT_THRESHOLDS];
     if (!threshold) {
       console.log('⚠️ No threshold defined for test type');
       return {
@@ -302,40 +302,40 @@ class MovementValidationService {
 
     switch (testType) {
       case TestType.SIT_UPS:
-        movementDetected = features.torsoAngleChange >= threshold.minAngleChange;
+        movementDetected = features.torsoAngleChange >= ((threshold as any).minAngleChange || 20);
         confidence = Math.min(1, features.torsoAngleChange / 40);
         break;
 
       case TestType.STANDING_VERTICAL_JUMP:
-        movementDetected = features.verticalRange >= threshold.minVerticalDisplacement!;
+        movementDetected = features.verticalRange >= ((threshold as any).minVerticalDisplacement || 0.1);
         confidence = Math.min(1, features.verticalRange / 0.2);
         break;
 
       case TestType.STANDING_BROAD_JUMP:
-        movementDetected = features.horizontalRange >= threshold.minHorizontalDisplacement!;
+        movementDetected = features.horizontalRange >= ((threshold as any).minHorizontalDisplacement || 0.15);
         confidence = Math.min(1, features.horizontalRange / 0.3);
         break;
 
       case TestType.FOUR_X_10M_SHUTTLE_RUN:
-        movementDetected = features.horizontalRange >= threshold.minHorizontalDisplacement! &&
-                          features.movementFrequency >= threshold.minDirectionChanges!;
+        movementDetected = features.horizontalRange >= ((threshold as any).minHorizontalDisplacement || 0.2) &&
+                          features.movementFrequency >= ((threshold as any).minDirectionChanges || 2);
         confidence = Math.min(1, (features.horizontalRange + features.movementFrequency * 0.1) / 0.4);
         break;
 
       case TestType.MEDICINE_BALL_THROW:
-        movementDetected = features.armExtension >= threshold.minArmExtension!;
+        movementDetected = features.armExtension >= ((threshold as any).minArmExtension || 30);
         confidence = Math.min(1, features.armExtension / 60);
         break;
 
       case TestType.ENDURANCE_RUN:
       case TestType.TENNIS_STANDING_START:
-        movementDetected = features.horizontalRange >= threshold.minHorizontalDisplacement! &&
-                          duration >= threshold.minDuration!;
+        movementDetected = features.horizontalRange >= ((threshold as any).minHorizontalDisplacement || 0.1) &&
+                          duration >= ((threshold as any).minDuration || 1);
         confidence = Math.min(1, features.horizontalRange / 0.3);
         break;
 
       case TestType.SIT_AND_REACH:
-        movementDetected = features.torsoAngleChange >= threshold.minAngleChange!;
+        movementDetected = features.torsoAngleChange >= ((threshold as any).minAngleChange || 15);
         confidence = Math.min(1, features.torsoAngleChange / 30);
         break;
 

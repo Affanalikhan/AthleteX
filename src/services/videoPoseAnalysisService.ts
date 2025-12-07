@@ -225,7 +225,7 @@ class VideoPoseAnalysisService {
 
     for (let i = 0; i < Math.min(frameCount, 90); i++) {
       // Simulate 33 landmarks with visibility
-      const landmarks = Array.from({ length: 33 }, (_, idx) => ({
+      const landmarks = Array.from({ length: 33 }, () => ({
         x: 0.3 + Math.random() * 0.4,
         y: 0.2 + Math.random() * 0.6,
         z: Math.random() * 0.1,
@@ -252,9 +252,9 @@ class VideoPoseAnalysisService {
   /**
    * Simulates the time it takes to process video with ML models
    */
-  private async simulateVideoProcessing(videoFile: File): Promise<void> {
+  private async simulateVideoProcessing(_videoFile: File): Promise<void> {
     // Simulate processing time based on file size
-    const processingTimeMs = Math.min(3000, (videoFile.size / (1024 * 1024)) * 500);
+    const processingTimeMs = Math.min(3000, (_videoFile.size / (1024 * 1024)) * 500);
     await new Promise(resolve => setTimeout(resolve, processingTimeMs));
   }
 
@@ -420,7 +420,8 @@ class VideoPoseAnalysisService {
         { message: formScore > 80 ? 'Excellent form maintained' : 'Form could be improved', severity: formScore > 80 ? 'success' : 'warning', timestamp: 1000 },
         { message: 'Keep knees bent at 90 degrees', severity: 'info', timestamp: 2000 },
         { message: 'Maintain consistent tempo', severity: 'info', timestamp: 3000 }
-      ]
+      ],
+      isValid: true
     };
   }
 
@@ -451,7 +452,8 @@ class VideoPoseAnalysisService {
         { message: 'Good knee extension on takeoff', severity: 'success', timestamp: 500 },
         { message: formScore > 85 ? 'Excellent landing technique' : 'Focus on landing stability', severity: formScore > 85 ? 'success' : 'warning', timestamp: 1000 },
         { message: 'Use arm swing for maximum height', severity: 'info', timestamp: 1500 }
-      ]
+      ],
+      isValid: true
     };
   }
 
@@ -479,7 +481,8 @@ class VideoPoseAnalysisService {
         { message: 'Keep legs straight during reach', severity: 'info', timestamp: 500 },
         { message: formScore > 80 ? 'Excellent flexibility' : 'Continue stretching exercises', severity: formScore > 80 ? 'success' : 'warning', timestamp: 1000 },
         { message: 'Hold position for 2 seconds', severity: 'info', timestamp: 2000 }
-      ]
+      ],
+      isValid: true
     };
   }
 
@@ -507,7 +510,8 @@ class VideoPoseAnalysisService {
         { message: 'Strong acceleration detected', severity: 'success', timestamp: 300 },
         { message: formScore > 80 ? 'Excellent running form' : 'Focus on arm drive', severity: formScore > 80 ? 'success' : 'warning', timestamp: 500 },
         { message: 'Maintain forward lean', severity: 'info', timestamp: 1000 }
-      ]
+      ],
+      isValid: true
     };
   }
 
@@ -535,7 +539,8 @@ class VideoPoseAnalysisService {
         { message: manualDistance ? `Best throw: ${manualDistance}m (manual)` : 'Distance estimated from video', severity: 'info', timestamp: 300 },
         { message: formScore > 85 ? 'Excellent throwing technique' : 'Focus on follow-through', severity: formScore > 85 ? 'success' : 'warning', timestamp: 500 },
         { message: 'Engage core for maximum power', severity: 'info', timestamp: 1000 }
-      ]
+      ],
+      isValid: true
     };
   }
 
@@ -563,7 +568,8 @@ class VideoPoseAnalysisService {
         { message: manualTime ? `Time: ${Math.floor(manualTime / 60)}:${(manualTime % 60).toString().padStart(2, '0')} (manual)` : 'Time estimated from video', severity: 'info', timestamp: 500 },
         { message: formScore > 80 ? 'Excellent pacing strategy' : 'Work on maintaining consistent pace', severity: formScore > 80 ? 'success' : 'warning', timestamp: 1000 },
         { message: 'Good running economy detected', severity: 'success', timestamp: 2000 }
-      ]
+      ],
+      isValid: true
     };
   }
 
@@ -588,7 +594,8 @@ class VideoPoseAnalysisService {
       feedback: [
         { message: 'Assessment completed', severity: 'success', timestamp: 0 },
         { message: 'Form analysis complete', severity: 'info', timestamp: 500 }
-      ]
+      ],
+      isValid: true
     };
   }
 

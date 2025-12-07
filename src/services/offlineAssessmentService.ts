@@ -277,16 +277,22 @@ class OfflineAssessmentService {
    * Register for background sync (if supported)
    */
   async registerBackgroundSync(): Promise<boolean> {
-    if (!('serviceWorker' in navigator) || !('sync' in ServiceWorkerRegistration.prototype)) {
-      console.log('⚠️ Background sync not supported');
+    if (!('serviceWorker' in navigator)) {
+      console.log('⚠️ Service Worker not supported');
       return false;
     }
 
     try {
       const registration = await navigator.serviceWorker.ready;
-      await registration.sync.register('sync-assessments');
-      console.log('✅ Background sync registered');
-      return true;
+      // Check if sync is supported
+      if ('sync' in registration) {
+        await (registration as any).sync.register('sync-assessments');
+        console.log('✅ Background sync registered');
+        return true;
+      } else {
+        console.log('⚠️ Background sync not supported');
+        return false;
+      }
     } catch (error) {
       console.error('❌ Failed to register background sync:', error);
       return false;
