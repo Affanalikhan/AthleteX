@@ -344,7 +344,7 @@ class AssessmentService {
 
   private async saveAssessmentToDatabase(assessmentData: any): Promise<void> {
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'https://athletex-api-production.up.railway.app';
+      const apiUrl = process.env.REACT_APP_API_URL || 'https://athletex-api-production.up.railway.app';
       const response = await fetch(`${apiUrl}/api/assessments`, {
         method: 'POST',
         headers: {
